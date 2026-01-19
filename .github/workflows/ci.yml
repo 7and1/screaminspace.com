@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: false
+
+      - name: Run unit tests
+        run: node --test tests/unit/*.test.mjs
+
+      - name: Run integration tests
+        run: node --test tests/integration/*.test.mjs
+
+      - name: Validate HTML
+        run: |
+          npx --yes html-validate index.html 404.html \
+            --config .htmlvalidaterc.json \
+            || true
+
+      - name: Check file sizes
+        run: |
+          bash .github/scripts/check-sizes.sh
+
+      - name: Lint security headers
+        run: |
+          bash .github/scripts/validate-headers.sh
+
+  lint:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for console.log statements
+        run: |
+          if grep -r "console\.log" index.html | grep -v "console\.warn\|console\.error"; then
+            echo "::warning::Found console.log statements in production code"
+            exit 1
+          fi
+
+      - name: Verify SEO metadata
+        run: |
+          bash .github/scripts/verify-seo.sh
+
+      - name: Validate assets exist
+        run: |
+          bash .github/scripts/verify-assets.sh

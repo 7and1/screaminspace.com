@@ -1,0 +1,13 @@
+# robots.txt for screaminspace.com
+
+User-agent: *
+Allow: /
+
+# Allow search engines to access game assets
+Allow: /assets/
+
+# Crawl-delay for bot throttling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://screaminspace.com/sitemap.xml

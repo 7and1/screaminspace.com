@@ -1,0 +1,70 @@
+# Cloudflare Pages/Wrangler Configuration
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+#
+# Copy this file to wrangler.toml and fill in your account details:
+#   cp wrangler.toml.example wrangler.toml
+#
+# IMPORTANT: Never commit wrangler.toml with real credentials!
+
+name = "screaminspace"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Your Cloudflare Account ID - found in Cloudflare dashboard URL
+# or set via environment variable: CLOUDFLARE_ACCOUNT_ID
+# account_id = "your-account-id-here"
+
+# Environment-specific configuration
+[env.production]
+name = "screaminspace"
+routes = [
+  { pattern = "screaminspace.com/*", zone_name = "screaminspace.com" }
+]
+
+[env.preview]
+name = "screaminspace-preview"
+
+# Pages Functions configuration
+[build]
+command = "echo 'No build step required for static HTML'"
+
+# Build output directory (relative to project root)
+# For static HTML, we deploy from root
+output_dir = "./"
+
+# Static assets configuration
+[build.processing]
+skip_processing = false
+
+[build.processing.css]
+bundle = true
+minify = true
+
+[build.processing.js]
+bundle = true
+minify = true
+
+[build.processing.html]
+pretty_urls = true
+
+[build.processing.images]
+quality = 85
+
+# Variables available in Pages Functions
+[vars]
+ENVIRONMENT = "production"
+SITE_URL = "https://screaminspace.com"
+
+[env.preview.vars]
+ENVIRONMENT = "preview"
+
+# KV Namespaces (optional - for future features)
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your_kv_namespace_id"
+
+# D1 Databases (optional - for future features)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "screaminspace_db"
+# database_id = "your_d1_database_id"

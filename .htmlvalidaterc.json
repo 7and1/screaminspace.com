@@ -1,0 +1,14 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "element-permitted-content": "warn",
+    "element-permitted-occurrences": "warn",
+    "element-permitted-order": "warn",
+    "require-doctype": "error",
+    "require-lang": "error",
+    "require-meta-description": "error",
+    "require-meta-viewport": "warn",
+    "title-require": "error"
+  },
+  "elements": ["html5"]
+}

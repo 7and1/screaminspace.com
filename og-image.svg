@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b0f1a" />
+      <stop offset="55%" stop-color="#05060a" />
+      <stop offset="100%" stop-color="#020308" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <g opacity="0.2">
+    <path d="M60 80h220v2H60zm0 20h320v2H60zM60 140h460v2H60z" fill="#00f5ff" />
+    <path d="M900 520h220v2H900zm-120 20h340v2H780z" fill="#ff2d55" />
+  </g>
+  <g filter="url(#glow)">
+    <text x="96" y="290" font-family="Oxanium, sans-serif" font-size="84" fill="#00f5ff" letter-spacing="4">SCREAM IN SPACE</text>
+  </g>
+  <text x="100" y="360" font-family="Oxanium, sans-serif" font-size="28" fill="#d9e6ff">Sci-fi horror survival shooter</text>
+  <text x="100" y="400" font-family="Oxanium, sans-serif" font-size="22" fill="#6c7b9d">Fight through the dark. The void fights back.</text>
+</svg>

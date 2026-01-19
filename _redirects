@@ -1,0 +1,19 @@
+# Cloudflare Pages Redirects Configuration
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Force HTTPS
+http://screaminspace.com/* https://screaminspace.com/:splat 301!
+http://www.screaminspace.com/* https://screaminspace.com/:splat 301!
+
+# Remove www
+https://www.screaminspace.com/* https://screaminspace.com/:splat 301!
+
+# Vanity redirects (optional - uncomment if needed)
+# /play / 301
+# /game / 301
+
+# API proxy (if needed for future features)
+# /api/* https://api.example.com/:splat 200
+
+# Fallback for SPA routes (if we add client-side routing later)
+# /* /index.html 200

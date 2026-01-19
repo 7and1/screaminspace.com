@@ -1,0 +1,30 @@
+{
+  "name": "screaminspace.com",
+  "version": "1.0.0",
+  "description": "Sci-Fi Horror Survival Shooter Game",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/**/*.test.mjs",
+    "test:unit": "node --test tests/unit/**/*.test.mjs",
+    "test:integration": "node --test tests/integration/**/*.test.mjs",
+    "test:e2e": "node --test tests/e2e/**/*.test.mjs",
+    "test:performance": "node --test tests/performance/**/*.test.mjs",
+    "test:accessibility": "node --test tests/accessibility/**/*.test.mjs",
+    "test:coverage": "c8 --reporter=html --reporter=text node --test tests/**/*.test.mjs",
+    "test:ci": "node --test --reporter=spec tests/**/*.test.mjs",
+    "deploy:preview": "bash scripts/deploy.sh preview",
+    "deploy:production": "bash scripts/deploy.sh production",
+    "deploy:rollback": "bash scripts/rollback.sh production",
+    "optimize": "bash scripts/optimize-assets.sh",
+    "smoke-test": "bash scripts/smoke-test.sh http://localhost:8080",
+    "health-check": "bash scripts/health-check.sh https://screaminspace.com",
+    "validate": "npm run test && bash .github/scripts/verify-assets.sh"
+  },
+  "devDependencies": {
+    "c8": "^10.1.2",
+    "html-validate": "^8.11.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

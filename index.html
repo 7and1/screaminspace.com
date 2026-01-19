@@ -1,0 +1,2418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Scream In Space | Free Sci-Fi Horror Survival Shooter Game</title>
+  <meta name="description" content="Play Scream In Space - a free browser-based sci-fi horror survival shooter. Navigate darkness, fight enemies with limited flashlight vision, experience retro CRT glitch aesthetics. No download required." />
+  <meta name="keywords" content="scream in space, sci-fi horror game, space shooter, survival horror, browser game, HTML5 game, free web game, top-down shooter, flashlight game, darkness survival, indie horror game, retro CRT game, space survival" />
+  <meta name="author" content="Scream In Space" />
+  <meta name="publisher" content="screaminspace.com" />
+  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#05060a" />
+  <link rel="canonical" href="https://screaminspace.com/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Scream In Space" />
+  <meta property="og:title" content="Scream In Space - Free Sci-Fi Horror Survival Shooter" />
+  <meta property="og:description" content="Fight through the void. Your flashlight is your only ally in this free browser-based horror shooter with CRT glitch aesthetics." />
+  <meta property="og:url" content="https://screaminspace.com/" />
+  <meta property="og:image" content="https://screaminspace.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Scream In Space game screenshot showing dark space environment with cyan flashlight cone" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@screaminspace" />
+  <meta name="twitter:creator" content="@screaminspace" />
+  <meta name="twitter:title" content="Scream In Space - Free Sci-Fi Horror Shooter" />
+  <meta name="twitter:description" content="No one can hear you scream. Play this free browser horror game now - no download required." />
+  <meta name="twitter:image" content="https://screaminspace.com/og-image.png" />
+  <meta name="twitter:image:alt" content="Scream In Space game screenshot" />
+  <meta name="twitter:domain" content="screaminspace.com" />
+
+  <!-- Structured Data - Video Game -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Scream In Space",
+    "description": "A browser-based sci-fi horror survival shooter with CRT glitch aesthetics and dynamic lighting. Fight through the void using your flashlight as your only ally.",
+    "genre": ["Survival Horror", "Shooter", "Sci-Fi"],
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any (HTML5/JavaScript)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "bestRating": 100,
+      "ratingValue": 85
+    },
+    "url": "https://screaminspace.com/"
+  }
+  </script>
+
+  <!-- Structured Data - WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Scream In Space",
+    "url": "https://screaminspace.com/",
+    "description": "Free browser-based sci-fi horror survival shooter game"
+  }
+  </script>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Scream In Space" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305060a'/%3E%3Cpath d='M32 6 L56 58 L32 48 L8 58 Z' fill='%2300f5ff'/%3E%3Ccircle cx='32' cy='30' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <link rel="dns-prefetch" href="https://screaminspace.com/assets/" />
+
+  <style>
+    :root {
+      --bg: #05060a;
+      --cyan: #00f5ff;
+      --red: #ff2d55;
+      --green: #44ff88;
+      --text: #d9e6ff;
+      --muted: #6c7b9d;
+      --font-display: "Oxanium", monospace;
+      --transition-fast: 150ms ease;
+      --transition-medium: 250ms ease;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    *, button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: radial-gradient(circle at 20% 20%, #0b0f1a 0%, #05060a 45%, #020308 100%);
+      color: var(--text);
+      font-family: var(--font-display);
+      overflow: hidden;
+      touch-action: none;
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    /* Focus styles for accessibility */
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      isolation: isolate;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+    }
+
+    /* ============ CRT Overlays ============ */
+    #crt-overlay,
+    #crt-vignette,
+    #crt-scanline {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+
+    #crt-overlay {
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.015) 1px,
+          rgba(0, 0, 0, 0.02) 2px,
+          rgba(0, 0, 0, 0.04) 3px
+        );
+      mix-blend-mode: screen;
+      opacity: 0.4;
+      animation: flicker 4s infinite;
+      backface-visibility: hidden;
+    }
+
+    #crt-scanline {
+      background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.1) 50%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    #crt-vignette {
+      box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+      opacity: 1;
+    }
+
+    /* CRT edge glow */
+    #crt-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow:
+        inset 0 0 100px rgba(0, 245, 255, 0.03),
+        inset 0 0 20px rgba(0, 245, 255, 0.02);
+      pointer-events: none;
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      #crt-scanline {
+        display: none;
+      }
+    }
+
+    /* ============ Start Screen ============ */
+    #start-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, #0f1520 0%, #05060a 70%);
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    #start-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .game-title {
+      font-size: clamp(32px, 8vw, 72px);
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-shadow:
+        0 0 20px rgba(0, 245, 255, 0.5),
+        0 0 40px rgba(0, 245, 255, 0.3),
+        0 0 60px rgba(0, 245, 255, 0.1);
+      margin-bottom: 0.5rem;
+      animation: titleGlow 3s ease-in-out infinite;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .game-subtitle {
+      font-size: clamp(12px, 2.5vw, 16px);
+      color: var(--red);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .start-panel {
+      background: rgba(6, 10, 18, 0.85);
+      border: 1px solid rgba(0, 245, 255, 0.2);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      max-width: 420px;
+      backdrop-filter: blur(10px);
+      animation: slideUp 0.5s ease-out;
+      margin: 0 1rem;
+    }
+
+    .instructions {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .instruction-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 13px;
+    }
+
+    .key-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      padding: 0 6px;
+      height: 26px;
+      background: rgba(0, 245, 255, 0.1);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--cyan);
+      font-weight: 500;
+      gap: 2px;
+    }
+
+    .key-badge .separator {
+      color: var(--muted);
+      margin: 0 2px;
+    }
+
+    /* ============ Buttons ============ */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: rgba(0, 245, 255, 0.1);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      overflow: hidden;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(0, 245, 255, 0.1) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .btn:hover {
+      background: rgba(0, 245, 255, 0.2);
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: rgba(0, 245, 255, 0.15);
+      border-color: rgba(0, 245, 255, 0.5);
+      padding: 1rem 2.5rem;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: rgba(0, 245, 255, 0.25);
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    /* ============ HUD ============ */
+    #hud {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #hud.visible {
+      opacity: 1;
+    }
+
+    .hud-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 16px 20px;
+    }
+
+    .hud-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+    }
+
+    .stat-value.highlight {
+      color: var(--cyan);
+    }
+
+    /* Health bar */
+    .health-bar-container {
+      width: 180px;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .health-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      border-radius: 3px;
+      transition: width 0.3s ease, background 0.3s ease;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .health-bar-fill.low {
+      background: var(--red);
+    }
+
+    .health-bar-fill.medium {
+      background: #ffaa00;
+    }
+
+    .health-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Settings button */
+    .hud-controls {
+      pointer-events: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ============ Pause Menu ============ */
+    #pause-menu {
+      position: absolute;
+      inset: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 6, 10, 0.85);
+      backdrop-filter: blur(5px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #pause-menu.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .pause-panel {
+      background: rgba(6, 10, 18, 0.95);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      min-width: 300px;
+      animation: scaleIn 0.3s ease-out;
+    }
+
+    .pause-title {
+      font-size: 28px;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+    }
+
+    .pause-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .pause-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* ============ Settings Panel ============ */
+    #settings-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 95;
+      background: rgba(6, 10, 18, 0.95);
+      border: 1px solid rgba(0, 245, 255, 0.3);
+      border-radius: 8px;
+      padding: 2rem;
+      min-width: 320px;
+      max-width: 90vw;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #settings-panel.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .settings-title {
+      font-size: 20px;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .setting-label {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .setting-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .toggle.active {
+      background: rgba(0, 245, 255, 0.3);
+      border-color: var(--cyan);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: var(--text);
+      border-radius: 50%;
+      transition: transform var(--transition-fast);
+    }
+
+    .toggle.active::after {
+      transform: translateX(22px);
+      background: var(--cyan);
+    }
+
+    /* Quality selector */
+    .quality-options {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .quality-option {
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .quality-option:hover {
+      color: var(--text);
+    }
+
+    .quality-option.active {
+      background: rgba(0, 245, 255, 0.2);
+      color: var(--cyan);
+    }
+
+    .settings-close {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ============ Game Over Screen ============ */
+    #game-over-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 85;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, #1a0508 0%, #05060a 70%);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #game-over-screen.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .game-over-title {
+      font-size: clamp(28px, 6vw, 56px);
+      font-weight: 700;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-shadow:
+        0 0 20px rgba(255, 45, 85, 0.5),
+        0 0 40px rgba(255, 45, 85, 0.3);
+      margin-bottom: 1rem;
+      animation: gameOverShake 0.5s ease-out;
+      text-align: center;
+    }
+
+    .final-score {
+      font-size: clamp(16px, 3vw, 24px);
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .final-kills {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .game-over-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 200px;
+    }
+
+    /* ============ Touch Controls ============ */
+    #touch-controls {
+      position: absolute;
+      inset: 0;
+      z-index: 15;
+      display: none;
+      pointer-events: none;
+    }
+
+    .touch-zone {
+      position: absolute;
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    #joystick-zone {
+      bottom: 40px;
+      left: 40px;
+      width: 120px;
+      height: 120px;
+    }
+
+    #joystick-base {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 245, 255, 0.1);
+      border: 2px solid rgba(0, 245, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #joystick-thumb {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 245, 255, 0.3);
+      border: 2px solid rgba(0, 245, 255, 0.5);
+      border-radius: 50%;
+      transform: translate(0, 0);
+      transition: transform 0.1s ease-out;
+    }
+
+    #joystick-thumb.active {
+      background: rgba(0, 245, 255, 0.5);
+    }
+
+    #fire-zone {
+      bottom: 40px;
+      right: 40px;
+      width: 100px;
+      height: 100px;
+    }
+
+    #fire-button {
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 45, 85, 0.2);
+      border: 2px solid rgba(255, 45, 85, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: transform 0.1s ease, background 0.1s ease;
+    }
+
+    #fire-button:active {
+      transform: scale(0.95);
+      background: rgba(255, 45, 85, 0.4);
+    }
+
+    /* Aim zone for mobile */
+    #aim-zone {
+      position: absolute;
+      top: 20%;
+      left: 20%;
+      right: 20%;
+      bottom: 20%;
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    /* ============ Score Popup ============ */
+    .score-popup {
+      position: absolute;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--cyan);
+      pointer-events: none;
+      animation: scoreFloat 0.8s ease-out forwards;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+      z-index: 25;
+    }
+
+    /* ============ Damage Indicator ============ */
+    #damage-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 18;
+      background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(255, 45, 85, 0.4) 100%);
+      opacity: 0;
+      transition: opacity 0.1s ease;
+    }
+
+    #damage-overlay.active {
+      animation: damagePulse 0.3s ease-out;
+    }
+
+    /* ============ Animations ============ */
+    @keyframes flicker {
+      0%, 100% { opacity: 0.35; }
+      20% { opacity: 0.4; }
+      40% { opacity: 0.3; }
+      60% { opacity: 0.42; }
+      80% { opacity: 0.28; }
+    }
+
+    @keyframes glitchPulse {
+      0% { filter: none; }
+      30% { filter: contrast(1.3) saturate(1.4) hue-rotate(-10deg); }
+      60% { filter: contrast(1.2) saturate(1.2) hue-rotate(5deg); }
+      100% { filter: none; }
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(0, 245, 255, 0.5), 0 0 40px rgba(0, 245, 255, 0.3); }
+      50% { text-shadow: 0 0 30px rgba(0, 245, 255, 0.7), 0 0 60px rgba(0, 245, 255, 0.5); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes scoreFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(1.2);
+      }
+    }
+
+    @keyframes damagePulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes gameOverShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    /* ============ Responsive Design ============ */
+    @media (max-width: 720px) {
+      .hud-top {
+        padding: 12px 16px;
+      }
+
+      .stat-value {
+        font-size: 16px;
+      }
+
+      .health-bar-container {
+        width: 140px;
+      }
+
+      .start-panel {
+        padding: 1.25rem 1.5rem;
+      }
+
+      .btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 13px;
+      }
+
+      #joystick-zone {
+        bottom: 24px;
+        left: 24px;
+        width: 100px;
+        height: 100px;
+      }
+
+      #fire-zone {
+        bottom: 24px;
+        right: 24px;
+        width: 80px;
+        height: 80px;
+      }
+
+      #aim-zone {
+        top: 15%;
+        left: 15%;
+        right: 15%;
+        bottom: 35%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .game-title {
+        letter-spacing: 0.05em;
+      }
+
+      .start-panel {
+        padding: 1rem;
+      }
+
+      .instructions {
+        gap: 0.5rem;
+      }
+
+      .instruction-row {
+        font-size: 12px;
+        flex-wrap: wrap;
+      }
+
+      .pause-panel,
+      #settings-panel {
+        padding: 1.5rem;
+        min-width: 280px;
+      }
+    }
+
+    /* Portrait mode */
+    @media (max-width: 600px) and (orientation: portrait) {
+      .start-panel {
+        margin-top: auto;
+        margin-bottom: 2rem;
+        max-width: calc(100% - 2rem);
+      }
+
+      #touch-controls {
+        display: block;
+      }
+    }
+
+    /* Show touch controls on touch devices */
+    @media (hover: none) and (pointer: coarse) {
+      #touch-controls {
+        display: block;
+      }
+
+      .key-badge {
+        display: none;
+      }
+
+      .touch-hint {
+        display: inline;
+      }
+    }
+
+    /* Hide touch hints on desktop */
+    .touch-hint {
+      display: none;
+    }
+
+    /* ============ Screen Reader Only ============ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--cyan);
+      color: var(--bg);
+      padding: 8px;
+      z-index: 200;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .btn {
+        border-width: 2px;
+      }
+
+      .health-bar-fill {
+        border: 1px solid currentColor;
+      }
+    }
+
+    /* ============ Old UI Panel (hidden) ============ */
+    #ui-panel {
+      display: none;
+    }
+
+    .glitch {
+      animation: glitchPulse 0.18s ease-in-out 1;
+      will-change: filter, transform;
+    }
+
+    .glitch canvas {
+      filter: contrast(1.2) saturate(1.25) hue-rotate(6deg);
+      transform: translate3d(1px, -1px, 0);
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to game</a>
+  <div id="game-container" role="application" aria-label="Scream In Space game">
+    <div id="crt-overlay"></div>
+    <div id="crt-scanline"></div>
+    <div id="crt-vignette"></div>
+    <div id="damage-overlay" aria-hidden="true"></div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" role="dialog" aria-labelledby="game-title" aria-describedby="game-subtitle">
+      <h1 id="game-title" class="game-title">Scream In Space</h1>
+      <p id="game-subtitle" class="game-subtitle">Survival Horror Shooter</p>
+      <div class="start-panel">
+        <div class="instructions">
+          <div class="instruction-row">
+            <span class="key-badge"><span class="key">W</span><span class="separator">/</span><span class="key">A</span><span class="separator">/</span><span class="key">S</span><span class="separator">/</span><span class="key">D</span></span>
+            <span>Move ship</span>
+          </div>
+          <div class="instruction-row">
+            <span class="key-badge"><span class="key">Mouse</span></span>
+            <span>Aim flashlight</span>
+          </div>
+          <div class="instruction-row">
+            <span class="key-badge"><span class="key">Click</span><span class="separator">/</span><span class="key">Space</span></span>
+            <span>Fire weapon</span>
+          </div>
+          <div class="instruction-row">
+            <span class="key-badge"><span class="key">ESC</span></span>
+            <span>Pause game</span>
+          </div>
+          <div class="instruction-row touch-hint">
+            <span>Use left joystick to move, tap anywhere to aim, right button to fire</span>
+          </div>
+        </div>
+        <button id="start-btn" class="btn btn-primary">Initialize Mission</button>
+      </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" aria-hidden="true">
+      <div class="hud-top">
+        <div class="hud-stats">
+          <div class="stat-row">
+            <span class="stat-label">Score</span>
+            <span id="score-value" class="stat-value highlight">0</span>
+            <span class="stat-label">Kills</span>
+            <span id="kills-value" class="stat-value">0</span>
+          </div>
+          <div class="health-bar-container" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Health">
+            <div id="health-bar" class="health-bar-fill"></div>
+          </div>
+          <div id="health-text" class="health-text">Hull Integrity: 100%</div>
+        </div>
+        <div class="hud-controls">
+          <button id="settings-btn" class="btn btn-icon" aria-label="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6m5.3-10.3l-4.2 4.2m0 4.2l4.2 4.2M1 12h6m6 0h6m-2.7-5.3l-4.2-4.2m-4.2 16.4l4.2-4.2"></path>
+            </svg>
+          </button>
+          <button id="pause-btn" class="btn btn-icon" aria-label="Pause">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" role="dialog" aria-labelledby="pause-title" aria-hidden="true">
+      <div class="pause-panel">
+        <h2 id="pause-title" class="pause-title">PAUSED</h2>
+        <p class="pause-subtitle">Mission suspended</p>
+        <div class="pause-actions">
+          <button id="resume-btn" class="btn btn-primary">Resume</button>
+          <button id="restart-btn" class="btn">Restart Mission</button>
+          <button id="quit-btn" class="btn">Abort to Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" role="dialog" aria-labelledby="settings-title" aria-hidden="true">
+      <h2 id="settings-title" class="settings-title">SYSTEM SETTINGS</h2>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Sound Effects</div>
+            <div class="setting-desc">Enable audio feedback</div>
+          </div>
+          <button id="sound-toggle" class="toggle active" aria-pressed="true" aria-label="Toggle sound"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">CRT Effects</div>
+            <div class="setting-desc">Retro scanline overlay</div>
+          </div>
+          <button id="crt-toggle" class="toggle active" aria-pressed="true" aria-label="Toggle CRT effects"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Reduced Motion</div>
+            <div class="setting-desc">Minimize animations</div>
+          </div>
+          <button id="motion-toggle" class="toggle" aria-pressed="false" aria-label="Toggle reduced motion"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Quality</div>
+            <div class="setting-desc">Graphics performance</div>
+          </div>
+          <div class="quality-options" role="radiogroup" aria-label="Quality setting">
+            <button class="quality-option" data-quality="low" role="radio" aria-checked="false">Low</button>
+            <button class="quality-option active" data-quality="medium" role="radio" aria-checked="true">Med</button>
+            <button class="quality-option" data-quality="high" role="radio" aria-checked="false">High</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-close">
+        <button id="settings-close-btn" class="btn">Close</button>
+      </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen" role="dialog" aria-labelledby="game-over-title" aria-hidden="true">
+      <h2 id="game-over-title" class="game-over-title">NO ONE HEARD YOU</h2>
+      <p class="final-score">Final Score: <span id="final-score-value">0</span></p>
+      <p class="final-kills">Enemies Eliminated: <span id="final-kills-value">0</span></p>
+      <div class="game-over-actions">
+        <button id="retry-btn" class="btn btn-primary">Try Again</button>
+        <button id="menu-btn" class="btn">Main Menu</button>
+      </div>
+    </div>
+
+    <!-- Touch Controls -->
+    <div id="touch-controls" aria-hidden="true">
+      <div id="aim-zone" class="touch-zone"></div>
+      <div id="joystick-zone" class="touch-zone">
+        <div id="joystick-base">
+          <div id="joystick-thumb"></div>
+        </div>
+      </div>
+      <div id="fire-zone" class="touch-zone">
+        <div id="fire-button">FIRE</div>
+      </div>
+    </div>
+
+    <!-- Old UI Panel (hidden) -->
+    <div id="ui-panel">
+      <h1>Scream In Space</h1>
+      <p>Fight through the void. Your flashlight is your only ally.</p>
+      <p class="hint">Move: WASD / Arrows. Aim: Mouse. Fire: Click or Space.</p>
+      <p class="hint">Tip: Stay inside the cone of light.</p>
+    </div>
+  </div>
+
+  <script>
+    // Performance monitoring singleton
+    const PerformanceMonitor = {
+      fps: 60,
+      frameTime: 16.67,
+      memory: 0,
+      lowMode: false,
+      lastCheck: 0,
+      checkInterval: 1000,
+
+      update(time) {
+        if (time - this.lastCheck < this.checkInterval) return;
+        this.lastCheck = time;
+
+        const fps = this.game.loop.actualFps;
+        this.fps = fps;
+        this.frameTime = 1000 / fps;
+
+        if (window.performance?.memory) {
+          this.memory = performance.memory.usedJSHeapSize / 1048576;
+        }
+
+        // Auto-detect low-end device and enable performance mode
+        if (fps < 45 && !this.lowMode) {
+          this.lowMode = true;
+          console.log('[Perf] Low-end device detected, enabling performance mode');
+          window.dispatchEvent(new CustomEvent('perf-low'));
+        } else if (fps > 55 && this.lowMode) {
+          this.lowMode = false;
+          console.log('[Perf] High-end device detected, disabling performance mode');
+          window.dispatchEvent(new CustomEvent('perf-high'));
+        }
+      },
+
+      reset() {
+        if (this.game?.loop) {
+          this.game.loop.resetFps();
+        }
+      }
+    };
+
+    // Object pool for enemies to reduce GC pressure
+    class EnemyPool {
+      constructor(maxSize) {
+        this.pool = [];
+        this.active = [];
+        this.maxSize = maxSize;
+      }
+
+      get() {
+        if (this.pool.length > 0) {
+          const enemy = this.pool.pop();
+          this.active.push(enemy);
+          return enemy;
+        }
+        if (this.active.length < this.maxSize) {
+          return null; // Let Phaser group handle creation
+        }
+        return null;
+      }
+
+      release(enemy) {
+        const idx = this.active.indexOf(enemy);
+        if (idx !== -1) {
+          this.active.splice(idx, 1);
+          this.pool.push(enemy);
+        }
+      }
+
+      getActive() {
+        return this.active;
+      }
+
+      forEach(callback) {
+        for (let i = this.active.length - 1; i >= 0; i--) {
+          callback(this.active[i], i);
+        }
+      }
+    }
+  </script>
+
+  <!-- UI Management Script -->
+  <script>
+    // ============ Game State & Settings ============
+    const GameState = {
+      isPlaying: false,
+      isPaused: false,
+      settings: {
+        sound: true,
+        crtEffects: true,
+        reducedMotion: false,
+        quality: 'medium'
+      }
+    };
+
+    // Load settings from localStorage
+    const loadSettings = () => {
+      try {
+        const saved = localStorage.getItem('screaminspace-settings');
+        if (saved) {
+          GameState.settings = { ...GameState.settings, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.warn('Could not load settings:', e);
+      }
+      applySettings();
+    };
+
+    // Save settings to localStorage
+    const saveSettings = () => {
+      try {
+        localStorage.setItem('screaminspace-settings', JSON.stringify(GameState.settings));
+      } catch (e) {
+        console.warn('Could not save settings:', e);
+      }
+    };
+
+    // Apply settings to DOM
+    const applySettings = () => {
+      // Sound toggle
+      const soundToggle = document.getElementById('sound-toggle');
+      if (soundToggle) {
+        soundToggle.classList.toggle('active', GameState.settings.sound);
+        soundToggle.setAttribute('aria-pressed', GameState.settings.sound);
+      }
+
+      // CRT toggle
+      const crtToggle = document.getElementById('crt-toggle');
+      if (crtToggle) {
+        crtToggle.classList.toggle('active', GameState.settings.crtEffects);
+        crtToggle.setAttribute('aria-pressed', GameState.settings.crtEffects);
+      }
+      const crtOverlay = document.getElementById('crt-overlay');
+      const crtScanline = document.getElementById('crt-scanline');
+      if (crtOverlay) crtOverlay.style.display = GameState.settings.crtEffects ? 'block' : 'none';
+      if (crtScanline) crtScanline.style.display = GameState.settings.crtEffects ? 'block' : 'none';
+
+      // Motion toggle
+      const motionToggle = document.getElementById('motion-toggle');
+      if (motionToggle) {
+        motionToggle.classList.toggle('active', GameState.settings.reducedMotion);
+        motionToggle.setAttribute('aria-pressed', GameState.settings.reducedMotion);
+      }
+      document.body.classList.toggle('reduced-motion', GameState.settings.reducedMotion);
+
+      // Quality options
+      document.querySelectorAll('.quality-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.quality === GameState.settings.quality);
+        opt.setAttribute('aria-checked', opt.dataset.quality === GameState.settings.quality);
+      });
+    };
+
+    // ============ UI Management ============
+    const UI = {
+      startScreen: document.getElementById('start-screen'),
+      hud: document.getElementById('hud'),
+      pauseMenu: document.getElementById('pause-menu'),
+      settingsPanel: document.getElementById('settings-panel'),
+      gameOverScreen: document.getElementById('game-over-screen'),
+      damageOverlay: document.getElementById('damage-overlay'),
+      scoreValue: document.getElementById('score-value'),
+      killsValue: document.getElementById('kills-value'),
+      healthBar: document.getElementById('health-bar'),
+      healthText: document.getElementById('health-text'),
+      finalScoreValue: document.getElementById('final-score-value'),
+      finalKillsValue: document.getElementById('final-kills-value'),
+      gameContainer: document.getElementById('game-container'),
+
+      showStartScreen() {
+        this.startScreen.classList.remove('hidden');
+        this.hud.classList.remove('visible');
+        this.gameOverScreen.classList.remove('visible');
+      },
+
+      hideStartScreen() {
+        this.startScreen.classList.add('hidden');
+        this.hud.classList.add('visible');
+      },
+
+      showPauseMenu() {
+        this.pauseMenu.classList.add('visible');
+      },
+
+      hidePauseMenu() {
+        this.pauseMenu.classList.remove('visible');
+      },
+
+      showSettings() {
+        this.settingsPanel.classList.add('visible');
+      },
+
+      hideSettings() {
+        this.settingsPanel.classList.remove('visible');
+      },
+
+      showGameOver(score, kills) {
+        this.finalScoreValue.textContent = score;
+        this.finalKillsValue.textContent = kills;
+        this.gameOverScreen.classList.add('visible');
+        this.hud.classList.remove('visible');
+      },
+
+      hideGameOver() {
+        this.gameOverScreen.classList.remove('visible');
+        this.hud.classList.add('visible');
+      },
+
+      updateHUD(score, kills, health) {
+        this.scoreValue.textContent = score;
+        this.killsValue.textContent = kills;
+        this.healthBar.style.width = `${Math.max(0, health)}%`;
+        this.healthText.textContent = `Hull Integrity: ${Math.max(0, Math.round(health))}%`;
+
+        // Update health bar color based on health
+        this.healthBar.classList.remove('low', 'medium');
+        if (health <= 25) {
+          this.healthBar.classList.add('low');
+        } else if (health <= 50) {
+          this.healthBar.classList.add('medium');
+        }
+      },
+
+      showDamageEffect() {
+        if (!GameState.settings.reducedMotion) {
+          this.damageOverlay.classList.remove('active');
+          void this.damageOverlay.offsetWidth;
+          this.damageOverlay.classList.add('active');
+        }
+      },
+
+      triggerGlitch() {
+        if (!GameState.settings.reducedMotion) {
+          this.gameContainer.classList.add('glitch');
+          setTimeout(() => {
+            this.gameContainer.classList.remove('glitch');
+          }, 160);
+        }
+      },
+
+      createScorePopup(x, y, points) {
+        if (GameState.settings.reducedMotion) return;
+
+        const popup = document.createElement('div');
+        popup.className = 'score-popup';
+        popup.textContent = `+${points}`;
+        popup.style.left = `${x}px`;
+        popup.style.top = `${y}px`;
+        this.gameContainer.appendChild(popup);
+
+        setTimeout(() => popup.remove(), 800);
+      }
+    };
+
+    // ============ Touch Controls ============
+    const TouchControls = {
+      joystickZone: document.getElementById('joystick-zone'),
+      joystickThumb: document.getElementById('joystick-thumb'),
+      fireZone: document.getElementById('fire-zone'),
+      aimZone: document.getElementById('aim-zone'),
+      moveVector: { x: 0, y: 0 },
+      isFiring: false,
+      aimPosition: { x: 0.5, y: 0.5 },
+
+      init() {
+        if (!this.joystickZone) return;
+
+        // Joystick handling
+        let joystickActive = false;
+        let joystickCenter = { x: 0, y: 0 };
+        const maxDistance = 35;
+
+        this.joystickZone.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          joystickActive = true;
+          this.joystickThumb.classList.add('active');
+          const rect = this.joystickZone.getBoundingClientRect();
+          joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        });
+
+        const handleJoystickMove = (e) => {
+          if (!joystickActive) return;
+          e.preventDefault();
+          const touch = e.touches[0];
+          const dx = touch.clientX - joystickCenter.x;
+          const dy = touch.clientY - joystickCenter.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const angle = Math.atan2(dy, dx);
+
+          const clampedDistance = Math.min(distance, maxDistance);
+          const thumbX = Math.cos(angle) * clampedDistance;
+          const thumbY = Math.sin(angle) * clampedDistance;
+
+          this.joystickThumb.style.transform = `translate(${thumbX}px, ${thumbY}px)`;
+
+          this.moveVector.x = (Math.cos(angle) * clampedDistance) / maxDistance;
+          this.moveVector.y = (Math.sin(angle) * clampedDistance) / maxDistance;
+        };
+
+        this.joystickZone.addEventListener('touchmove', handleJoystickMove);
+        document.addEventListener('touchmove', handleJoystickMove, { passive: false });
+
+        const handleJoystickEnd = () => {
+          joystickActive = false;
+          this.joystickThumb.classList.remove('active');
+          this.joystickThumb.style.transform = 'translate(0, 0)';
+          this.moveVector = { x: 0, y: 0 };
+        };
+
+        this.joystickZone.addEventListener('touchend', handleJoystickEnd);
+        this.joystickZone.addEventListener('touchcancel', handleJoystickEnd);
+
+        // Fire button
+        this.fireZone.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          this.isFiring = true;
+        });
+
+        this.fireZone.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          this.isFiring = false;
+        });
+
+        // Aim zone
+        this.aimZone.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          this.updateAim(e.touches[0]);
+        });
+
+        this.aimZone.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          this.updateAim(e.touches[0]);
+        });
+      },
+
+      updateAim(touch) {
+        const rect = this.aimZone.getBoundingClientRect();
+        this.aimPosition.x = (touch.clientX - rect.left) / rect.width;
+        this.aimPosition.y = (touch.clientY - rect.top) / rect.height;
+      }
+    };
+
+    // ============ Keyboard Navigation ============
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (UI.settingsPanel.classList.contains('visible')) {
+          UI.hideSettings();
+        } else if (GameState.isPlaying && !GameState.isPaused) {
+          pauseGame();
+        } else if (GameState.isPaused) {
+          resumeGame();
+        }
+      }
+
+      if (e.key === 'p' || e.key === 'P') {
+        if (GameState.isPlaying && !UI.settingsPanel.classList.contains('visible')) {
+          if (GameState.isPaused) {
+            resumeGame();
+          } else {
+            pauseGame();
+          }
+        }
+      }
+    });
+
+    // ============ Button Event Handlers ============
+    document.getElementById('start-btn')?.addEventListener('click', startGame);
+    document.getElementById('pause-btn')?.addEventListener('click', pauseGame);
+    document.getElementById('resume-btn')?.addEventListener('click', resumeGame);
+    document.getElementById('restart-btn')?.addEventListener('click', restartGame);
+    document.getElementById('quit-btn')?.addEventListener('click', quitToMenu);
+    document.getElementById('settings-btn')?.addEventListener('click', () => UI.showSettings());
+    document.getElementById('settings-close-btn')?.addEventListener('click', () => UI.hideSettings());
+    document.getElementById('retry-btn')?.addEventListener('click', restartGame);
+    document.getElementById('menu-btn')?.addEventListener('click', quitToMenu);
+
+    // Settings toggles
+    document.getElementById('sound-toggle')?.addEventListener('click', function() {
+      GameState.settings.sound = !GameState.settings.sound;
+      this.classList.toggle('active', GameState.settings.sound);
+      this.setAttribute('aria-pressed', GameState.settings.sound);
+      saveSettings();
+    });
+
+    document.getElementById('crt-toggle')?.addEventListener('click', function() {
+      GameState.settings.crtEffects = !GameState.settings.crtEffects;
+      this.classList.toggle('active', GameState.settings.crtEffects);
+      this.setAttribute('aria-pressed', GameState.settings.crtEffects);
+      document.getElementById('crt-overlay').style.display = GameState.settings.crtEffects ? 'block' : 'none';
+      document.getElementById('crt-scanline').style.display = GameState.settings.crtEffects ? 'block' : 'none';
+      saveSettings();
+    });
+
+    document.getElementById('motion-toggle')?.addEventListener('click', function() {
+      GameState.settings.reducedMotion = !GameState.settings.reducedMotion;
+      this.classList.toggle('active', GameState.settings.reducedMotion);
+      this.setAttribute('aria-pressed', GameState.settings.reducedMotion);
+      document.body.classList.toggle('reduced-motion', GameState.settings.reducedMotion);
+      saveSettings();
+    });
+
+    // Quality options
+    document.querySelectorAll('.quality-option').forEach(opt => {
+      opt.addEventListener('click', function() {
+        GameState.settings.quality = this.dataset.quality;
+        document.querySelectorAll('.quality-option').forEach(o => {
+          o.classList.remove('active');
+          o.setAttribute('aria-checked', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-checked', 'true');
+        saveSettings();
+
+        window.dispatchEvent(new CustomEvent('quality-change', { detail: GameState.settings.quality }));
+      });
+    });
+
+    // ============ Game Control Functions ============
+    let gameScene = null;
+
+    function startGame() {
+      UI.hideStartScreen();
+      UI.hideGameOver();
+      GameState.isPlaying = true;
+      GameState.isPaused = false;
+
+      if (gameScene) {
+        gameScene.scene.restart();
+      }
+    }
+
+    function pauseGame() {
+      if (!GameState.isPlaying) return;
+      GameState.isPaused = true;
+      UI.showPauseMenu();
+      if (gameScene) {
+        gameScene.pauseGame();
+      }
+    }
+
+    function resumeGame() {
+      GameState.isPaused = false;
+      UI.hidePauseMenu();
+      UI.hideSettings();
+      if (gameScene) {
+        gameScene.resumeGame();
+      }
+    }
+
+    function restartGame() {
+      UI.hidePauseMenu();
+      UI.hideGameOver();
+      UI.hideSettings();
+      GameState.isPlaying = true;
+      GameState.isPaused = false;
+      if (gameScene) {
+        gameScene.scene.restart();
+      }
+    }
+
+    function quitToMenu() {
+      GameState.isPlaying = false;
+      GameState.isPaused = false;
+      UI.hidePauseMenu();
+      UI.hideGameOver();
+      UI.hideSettings();
+      UI.showStartScreen();
+      if (gameScene) {
+        gameScene.scene.stop();
+        gameScene = null;
+      }
+    }
+
+    // Initialize settings on load
+    loadSettings();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.90.0/phaser.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    (() => {
+      'use strict';
+
+      // ============ Quality Configuration ============
+      const getQualityConfig = () => {
+        const quality = GameState.settings.quality || 'medium';
+        return {
+          particleCount: {
+            low: { engine: 60, explosion: 12 },
+            medium: { engine: 35, explosion: 16 },
+            high: { engine: 25, explosion: 20 }
+          },
+          enemyMaxCount: {
+            low: 30,
+            medium: 50,
+            high: 80
+          },
+          bulletMaxSize: {
+            low: 25,
+            medium: 45,
+            high: 60
+          },
+          visionUpdateRate: {
+            low: 3,
+            medium: 2,
+            high: 1
+          }
+        };
+      };
+
+      // Performance configuration (merged with quality settings)
+      const qualityConfig = getQualityConfig();
+      const PERF_CONFIG = {
+        targetFPS: 60,
+        mobileTargetFPS: 30,
+        particleCount: qualityConfig.particleCount,
+        enemyMaxCount: qualityConfig.enemyMaxCount,
+        bulletMaxSize: qualityConfig.bulletMaxSize,
+        visionUpdateRate: qualityConfig.visionUpdateRate,
+        physicsStep: { high: 1, low: 2 }
+      };
+
+      // Device detection
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isLowEnd = isMobile || navigator.hardwareConcurrency <= 2;
+
+      const GAME_WIDTH = 1280;
+      const GAME_HEIGHT = 720;
+
+      const config = {
+        type: Phaser.AUTO,
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
+        parent: 'game-container',
+        backgroundColor: '#05060a',
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { y: 0 },
+            debug: false,
+            fps: isLowEnd ? PERF_CONFIG.mobileTargetFPS : PERF_CONFIG.targetFPS,
+            timeStep: isLowEnd ? 1 / PERF_CONFIG.mobileTargetFPS : 1 / PERF_CONFIG.targetFPS,
+            maxSteps: isLowEnd ? 2 : 4,
+            fixedStep: true
+          }
+        },
+        scale: {
+          mode: Phaser.Scale.FIT,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+          width: GAME_WIDTH,
+          height: GAME_HEIGHT
+        },
+        pipeline: { 'WebGL': [] },
+        fps: {
+          target: isLowEnd ? PERF_CONFIG.mobileTargetFPS : PERF_CONFIG.targetFPS,
+          forceSetTimeOut: isLowEnd,
+          smoothStep: true
+        },
+        scene: []
+      };
+
+      const toRadians = Phaser.Math.DegToRad;
+
+      const safePlay = (scene, key, config) => {
+        if (!GameState.settings.sound) return;
+        if (scene.cache.audio.exists(key)) {
+          scene.sound.play(key, config);
+        }
+      };
+
+      class Bullet extends Phaser.Physics.Arcade.Image {
+        constructor(scene, x, y) {
+          super(scene, x, y, 'bullet');
+          this.speed = 900;
+          this.lifespan = 900;
+        }
+
+        fire(x, y, angle) {
+          this.setActive(true);
+          this.setVisible(true);
+          this.setPosition(x, y);
+          this.setRotation(angle + Math.PI / 2);
+          this.lifespan = 900;
+          this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+        }
+
+        preUpdate(time, delta) {
+          super.preUpdate(time, delta);
+          this.lifespan -= delta;
+          if (this.lifespan <= 0) {
+            this.setActive(false);
+            this.setVisible(false);
+            this.body.stop();
+          }
+        }
+      }
+
+      class SceneBoot extends Phaser.Scene {
+        constructor() {
+          super('SceneBoot');
+        }
+
+        preload() {
+          const { width, height } = this.scale;
+          const outline = this.add.rectangle(width / 2, height / 2, 360, 18, 0x0b1220)
+            .setStrokeStyle(1, 0x00f5ff, 0.8);
+          const fill = this.add.rectangle(width / 2 - 176, height / 2, 0, 8, 0x00f5ff)
+            .setOrigin(0, 0.5);
+          this.load.on('progress', (value) => {
+            fill.width = 352 * value;
+          });
+          this.load.on('complete', () => {
+            outline.destroy();
+            fill.destroy();
+          });
+
+          // Set base URL for assets (add ?v=cache bust if needed)
+          this.load.setBaseURL('https://screaminspace.com/');
+          this.load.setPath('assets/');
+
+          // Set cross origin for CDN assets
+          this.load.setCORS('anonymous');
+
+          // Optimize texture loading: disable mipmap for pixel art
+          this.load.image('player', 'assets/player.png');
+          this.load.image('enemy', 'assets/enemy.png');
+          this.load.image('bullet', 'assets/bullet.png');
+
+          // Audio placeholders with fallback handling
+          this.load.audio('scream', ['assets/scream.mp3']);
+          this.load.audio('heartbeat', ['assets/heartbeat.mp3']);
+          this.load.audio('laser', ['assets/laser.mp3']);
+          this.load.audio('hit', ['assets/hit.mp3']);
+
+          // Handle load errors gracefully
+          this.load.on('loaderror', (file) => {
+            console.warn(`Failed to load: ${file.key}, will use fallback`);
+          });
+        }
+
+        create() {
+          this.createTextures();
+          this.scene.start('SceneGame');
+        }
+
+        createTextures() {
+          const g = this.make.graphics({ x: 0, y: 0, add: false });
+
+          // Particle - use power-of-2 dimensions for better GPU performance
+          g.clear();
+          g.fillStyle(0x00f5ff, 1);
+          g.fillCircle(4, 4, 4);
+          g.generateTexture('particle', 8, 8);
+
+          // Star tile - optimize with fewer stars on mobile
+          const starCount = isLowEnd ? 16 : 24;
+          g.clear();
+          Phaser.Math.RND.seed = [0x1234, 0x5678, 0x90ab, 0xcdef];
+          g.fillStyle(0xffffff, 0.8);
+          for (let i = 0; i < starCount; i += 1) {
+            const x = Phaser.Math.RND.between(0, 63);
+            const y = Phaser.Math.RND.between(0, 63);
+            const r = Phaser.Math.RND.between(1, 2);
+            g.fillCircle(x, y, r);
+          }
+          g.generateTexture('starfield', 64, 64);
+
+          g.destroy();
+        }
+      }
+
+      class SceneGame extends Phaser.Scene {
+        constructor() {
+          super('SceneGame');
+          this.lastFired = 0;
+          this.fireRate = 180;
+          this.health = 100;
+          this.score = 0;
+          this.kills = 0;
+          this.aimAngle = 0;
+          this.invulnerableUntil = 0;
+          this.spawnDelay = 1400;
+          this.elapsed = 0;
+          this.lowPerfMode = isLowEnd;
+          this.frameCount = 0;
+          this.visionUpdateRate = PERF_CONFIG.visionUpdateRate;
+          this.lastEnemyUpdate = 0;
+          this.enemyUpdateRate = 100;
+          this.cachedPlayerPos = { x: 0, y: 0 };
+          this.cachedAimAngle = 0;
+          this.isPaused = false;
+        }
+
+        create() {
+          const { width, height } = this.scale;
+
+          // Set reference for UI
+          gameScene = this;
+
+          // Store reference for performance monitor
+          PerformanceMonitor.game = this.game;
+
+          // Use single texture for both starfields
+          this.starfieldFar = this.add.tileSprite(0, 0, width, height, 'starfield')
+            .setOrigin(0)
+            .setAlpha(this.lowPerfMode ? 0.25 : 0.35)
+            .setPipeline('TextureTintPipeline');
+          this.starfieldNear = this.add.tileSprite(0, 0, width, height, 'starfield')
+            .setOrigin(0)
+            .setAlpha(this.lowPerfMode ? 0.4 : 0.55)
+            .setPipeline('TextureTintPipeline');
+
+          this.renderer.config.antialias = true;
+
+          this.player = this.physics.add.sprite(width * 0.5, height * 0.5, 'player');
+          this.player.setScale(0.7);
+          this.player.setDamping(true);
+          this.player.setDrag(0.9);
+          this.player.setMaxVelocity(280);
+          this.player.setCollideWorldBounds(true);
+          this.player.body.setSize(this.player.displayWidth * 0.6, this.player.displayHeight * 0.6, true);
+          this.player.setTexture('player');
+
+          this.cursors = this.input.keyboard.createCursorKeys();
+          this.keys = this.input.keyboard.addKeys('W,A,S,D,SPACE,ESC,P');
+
+          const qualityConfig = getQualityConfig();
+          this.bullets = this.physics.add.group({
+            classType: Bullet,
+            maxSize: qualityConfig.bulletMaxSize,
+            runChildUpdate: true
+          });
+
+          this.enemies = this.physics.add.group({
+            maxSize: qualityConfig.enemyMaxCount,
+            runChildUpdate: false
+          });
+
+          this.enemyPool = new EnemyPool(this.enemies.maxSize);
+
+          const particleConfig = qualityConfig.particleCount;
+
+          this.engineParticles = this.add.particles(0, 0, 'particle');
+          this.engineEmitter = this.engineParticles.createEmitter({
+            speed: { min: 30, max: 90 },
+            scale: { start: 0.6, end: 0 },
+            alpha: { start: 0.8, end: 0 },
+            lifespan: 400,
+            blendMode: 'ADD',
+            frequency: particleConfig.engine,
+            quantity: 1,
+            maxParticles: this.lowPerfMode ? 30 : 50,
+            on: false
+          });
+          this.engineEmitter.startFollow(this.player);
+
+          this.explosionParticles = this.add.particles(0, 0, 'particle');
+          this.explosionEmitter = this.explosionParticles.createEmitter({
+            speed: { min: 60, max: 220 },
+            scale: { start: 1.2, end: 0 },
+            alpha: { start: 1, end: 0 },
+            lifespan: 600,
+            blendMode: 'ADD',
+            on: false,
+            maxParticles: particleConfig.explosion
+          });
+
+          this.physics.add.overlap(this.bullets, this.enemies, this.handleBulletHit, null, this);
+          this.physics.add.overlap(this.player, this.enemies, this.handlePlayerHit, null, this);
+
+          this.spawnEvent = this.time.addEvent({
+            delay: this.spawnDelay,
+            loop: true,
+            callback: this.spawnEnemy,
+            callbackScope: this
+          });
+
+          this.heartbeatEvent = this.time.addEvent({
+            delay: 1200,
+            loop: true,
+            callback: () => safePlay(this, 'heartbeat', { volume: 0.35 })
+          });
+
+          // Hide old text objects, using DOM HUD instead
+          this.scoreText = this.add.text(20, 20, '', {
+            fontFamily: 'Oxanium, sans-serif',
+            fontSize: '16px',
+            color: '#d9e6ff',
+            fixedWidth: 200,
+            align: 'left'
+          }).setScrollFactor(0).setVisible(false);
+
+          this.statusText = this.add.text(20, 42, '', {
+            fontFamily: 'Oxanium, sans-serif',
+            fontSize: '14px',
+            color: '#6c7b9d',
+            fixedWidth: 200,
+            align: 'left'
+          }).setScrollFactor(0).setVisible(false);
+
+          // Performance stats (debug mode only)
+          if (this.game.config.debug || window.location.search.includes('debug')) {
+            this.perfText = this.add.text(width - 10, 10, '60 FPS', {
+              fontFamily: 'monospace',
+              fontSize: '12px',
+              color: '#44ff88',
+              align: 'right'
+            }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+          }
+
+          this.darkness = this.add.rectangle(0, 0, width, height, 0x000000, this.lowPerfMode ? 0.75 : 0.82)
+            .setOrigin(0)
+            .setDepth(20);
+          this.visionShape = this.make.graphics({ x: 0, y: 0, add: false });
+          this.visionMask = this.visionShape.createGeometryMask();
+          this.visionMask.setInvertAlpha(true);
+          this.darkness.setMask(this.visionMask);
+
+          this.visionCache = {
+            coneLength: 420,
+            coneAngle: Phaser.Math.DegToRad(40),
+            baseRadius: 140
+          };
+
+          this.scale.on('resize', (gameSize) => {
+            this.starfieldFar.setSize(gameSize.width, gameSize.height);
+            this.starfieldNear.setSize(gameSize.width, gameSize.height);
+            this.darkness.setSize(gameSize.width, gameSize.height);
+          });
+
+          this.input.on('pointerdown', () => this.tryShoot());
+          this.input.on('pointermove', () => this.updateAim());
+
+          // Listen for performance and quality changes
+          window.addEventListener('perf-low', () => this.enableLowPerfMode());
+          window.addEventListener('perf-high', () => this.disableLowPerfMode());
+          window.addEventListener('quality-change', (e) => this.onQualityChange(e.detail));
+
+          // Initialize touch controls on touch devices
+          if (isMobile || ('ontouchstart' in window)) {
+            TouchControls.init();
+          }
+
+          this.updateAim();
+          this.updateUI();
+
+          this.cachedPlayerPos.x = this.player.x;
+          this.cachedPlayerPos.y = this.player.y;
+        }
+
+        pauseGame() {
+          this.isPaused = true;
+          this.physics.pause();
+          if (this.spawnEvent) this.spawnEvent.paused = true;
+          if (this.heartbeatEvent) this.heartbeatEvent.paused = true;
+        }
+
+        resumeGame() {
+          this.isPaused = false;
+          this.physics.resume();
+          if (this.spawnEvent) this.spawnEvent.paused = false;
+          if (this.heartbeatEvent) this.heartbeatEvent.paused = false;
+        }
+
+        onQualityChange(quality) {
+          const config = getQualityConfig();
+          this.visionUpdateRate = config.visionUpdateRate;
+          this.bullets.maxSize = config.bulletMaxSize;
+          this.enemies.maxSize = config.enemyMaxCount;
+          this.engineEmitter.setFrequency(config.particleCount.engine);
+          this.explosionEmitter.maxParticles = config.particleCount.explosion;
+        }
+
+        enableLowPerfMode() {
+          if (this.lowPerfMode) return;
+          this.lowPerfMode = true;
+          const config = getQualityConfig();
+          this.visionUpdateRate = config.visionUpdateRate.low;
+          this.engineEmitter.setFrequency(config.particleCount.low.engine);
+          this.engineEmitter.maxParticles = 30;
+          this.explosionEmitter.maxParticles = 20;
+          this.enemies.maxSize = config.enemyMaxCount.low;
+          this.darkness.setAlpha(0.75);
+        }
+
+        disableLowPerfMode() {
+          if (!this.lowPerfMode) return;
+          this.lowPerfMode = false;
+          const config = getQualityConfig();
+          this.visionUpdateRate = config.visionUpdateRate;
+          this.engineEmitter.setFrequency(config.particleCount.engine);
+          this.engineEmitter.maxParticles = 50;
+          this.explosionEmitter.maxParticles = config.particleCount.explosion;
+          this.enemies.maxSize = config.enemyMaxCount;
+          this.darkness.setAlpha(0.82);
+        }
+
+        shutdown() {
+          window.removeEventListener('perf-low', this.enableLowPerfMode);
+          window.removeEventListener('perf-high', this.disableLowPerfMode);
+          window.removeEventListener('quality-change', this.onQualityChange);
+
+          if (this.engineEmitter) {
+            this.engineEmitter.stop();
+            this.engineEmitter.remove();
+          }
+          if (this.explosionEmitter) {
+            this.explosionEmitter.stop();
+            this.explosionEmitter.remove();
+          }
+          if (this.spawnEvent) this.spawnEvent.destroy();
+          if (this.heartbeatEvent) this.heartbeatEvent.destroy();
+          if (this.visionShape) this.visionShape.destroy();
+          if (this.visionMask) this.visionMask.destroy();
+        }
+
+        update(time, delta) {
+          if (this.isPaused) return;
+
+          this.elapsed += delta;
+          this.frameCount++;
+
+          PerformanceMonitor.update(time);
+
+          this.handleMovement();
+          this.tryShoot(time);
+          this.updateAim();
+          this.updateStars(delta);
+
+          if (this.frameCount % this.visionUpdateRate === 0) {
+            this.updateSpotlight();
+          }
+
+          if (time >= this.lastEnemyUpdate + this.enemyUpdateRate) {
+            this.updateEnemies();
+            this.lastEnemyUpdate = time;
+          }
+
+          this.updateEngineTrail();
+
+          if (this.frameCount % 10 === 0) {
+            this.updateUI();
+          }
+
+          if (this.perfText && this.frameCount % 30 === 0) {
+            const fps = Math.round(this.game.loop.actualFps);
+            const mem = PerformanceMonitor.memory ? Math.round(PerformanceMonitor.memory) + 'MB' : 'N/A';
+            const mode = this.lowPerfMode ? '[LOW]' : '[HIGH]';
+            this.perfText.setText(`${fps} FPS ${mode}\n${mem}\nEnemies: ${this.enemies.getChildren().filter(e => e.active).length}`);
+          }
+
+          this.updateDifficulty();
+        }
+
+        handleMovement() {
+          const accel = 420;
+          let ax = 0, ay = 0;
+
+          // Keyboard input
+          if (this.cursors.left.isDown || this.keys.A.isDown) ax -= accel;
+          if (this.cursors.right.isDown || this.keys.D.isDown) ax += accel;
+          if (this.cursors.up.isDown || this.keys.W.isDown) ay -= accel;
+          if (this.cursors.down.isDown || this.keys.S.isDown) ay += accel;
+
+          // Touch joystick input
+          if (TouchControls.moveVector.x !== 0 || TouchControls.moveVector.y !== 0) {
+            ax = TouchControls.moveVector.x * accel;
+            ay = TouchControls.moveVector.y * accel;
+          }
+
+          this.player.setAcceleration(ax, ay);
+          this.cachedPlayerPos.x = this.player.x;
+          this.cachedPlayerPos.y = this.player.y;
+        }
+
+        updateAim() {
+          let aimX, aimY;
+
+          // Check for touch aim
+          if (TouchControls.aimPosition.x !== 0.5 || TouchControls.aimPosition.y !== 0.5) {
+            const { width, height } = this.scale;
+            aimX = TouchControls.aimPosition.x * width;
+            aimY = TouchControls.aimPosition.y * height;
+          } else {
+            const pointer = this.input.activePointer;
+            const worldPoint = pointer.position;
+            aimX = worldPoint.x + this.cameras.main.scrollX;
+            aimY = worldPoint.y + this.cameras.main.scrollY;
+          }
+
+          this.aimAngle = Phaser.Math.Angle.Between(this.cachedPlayerPos.x, this.cachedPlayerPos.y, aimX, aimY);
+          this.player.setRotation(this.aimAngle + Math.PI / 2);
+          this.cachedAimAngle = this.aimAngle;
+        }
+
+        tryShoot(time = 0) {
+          const wantsFire = this.keys.SPACE.isDown || this.input.activePointer.isDown || TouchControls.isFiring;
+          if (!wantsFire) return;
+          if (time < this.lastFired + this.fireRate) return;
+
+          const bullet = this.bullets.get();
+          if (!bullet) return;
+
+          const offsetDistance = this.player.displayWidth * 0.45;
+          if (!this._offsetVector) this._offsetVector = new Phaser.Math.Vector2();
+          this._offsetVector.setTo(offsetDistance, 0).rotate(this.aimAngle);
+          bullet.fire(
+            this.cachedPlayerPos.x + this._offsetVector.x,
+            this.cachedPlayerPos.y + this._offsetVector.y,
+            this.aimAngle
+          );
+          this.lastFired = time;
+
+          if (!this.lowPerfMode) {
+            this.cameras.main.shake(50, 0.002);
+          }
+          safePlay(this, 'laser', { volume: 0.2 });
+        }
+
+        updateStars(delta) {
+          this.starfieldFar.tilePositionX += delta * 0.005;
+          this.starfieldNear.tilePositionX += delta * 0.02;
+        }
+
+        updateSpotlight() {
+          const { coneLength, coneAngle, baseRadius } = this.visionCache;
+          const px = this.cachedPlayerPos.x;
+          const py = this.cachedPlayerPos.y;
+          const left = this.aimAngle - coneAngle;
+          const right = this.aimAngle + coneAngle;
+
+          this.visionShape.clear();
+          this.visionShape.fillStyle(0xffffff, 1);
+          this.visionShape.fillCircle(px, py, baseRadius);
+          this.visionShape.beginPath();
+          this.visionShape.moveTo(px, py);
+          this.visionShape.arc(px, py, coneLength, left, right, false);
+          this.visionShape.closePath();
+          this.visionShape.fillPath();
+
+          const activeEnemies = this.enemies.getChildren();
+          const len = activeEnemies.length;
+          for (let i = 0; i < len; i++) {
+            const enemy = activeEnemies[i];
+            if (!enemy.active) continue;
+            const dx = enemy.x - px;
+            const dy = enemy.y - py;
+            const distSq = dx * dx + dy * dy;
+            const maxDistSq = coneLength * coneLength;
+            if (distSq > maxDistSq) {
+              enemy.setAlpha(0.15);
+              continue;
+            }
+            const angleTo = Math.atan2(dy, dx);
+            const delta = Phaser.Math.Angle.Wrap(angleTo - this.aimAngle);
+            const inCone = Math.abs(delta) < coneAngle;
+            enemy.setAlpha(inCone ? 1 : 0.15);
+          }
+        }
+
+        updateEnemies() {
+          const activeEnemies = this.enemies.getChildren();
+          const len = activeEnemies.length;
+          const px = this.cachedPlayerPos.x;
+          const py = this.cachedPlayerPos.y;
+
+          for (let i = 0; i < len; i++) {
+            const enemy = activeEnemies[i];
+            if (!enemy.active) continue;
+
+            const dx = px - enemy.x;
+            const dy = py - enemy.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const speed = enemy.speed || 80;
+
+            if (dist > 1) {
+              enemy.body.velocity.x = (dx / dist) * speed;
+              enemy.body.velocity.y = (dy / dist) * speed;
+            }
+
+            enemy.setRotation(Math.atan2(dy, dx) + Math.PI / 2);
+          }
+        }
+
+        updateEngineTrail() {
+          const offsetDistance = -this.player.displayWidth * 0.35;
+          const angle = this.cachedAimAngle;
+          const offsetX = Math.cos(angle) * offsetDistance;
+          const offsetY = Math.sin(angle) * offsetDistance;
+          this.engineEmitter.followOffset.set(offsetX, offsetY);
+          this.engineEmitter.setAngle(Phaser.Math.RadToDeg(angle) + 180);
+        }
+
+        updateDifficulty() {
+          const tier = Math.min(6, Math.floor(this.elapsed / 20000));
+          const targetDelay = Math.max(500, 1400 - tier * 140);
+          if (targetDelay !== this.spawnDelay) {
+            this.spawnDelay = targetDelay;
+            this.spawnEvent.reset({
+              delay: this.spawnDelay,
+              loop: true,
+              callback: this.spawnEnemy,
+              callbackScope: this
+            });
+          }
+        }
+
+        updateUI() {
+          // Update DOM-based HUD
+          UI.updateHUD(this.score, this.kills, this.health);
+
+          const healthRatio = Phaser.Math.Clamp(this.health / 100, 0, 1);
+          const heartbeatDelay = Phaser.Math.Linear(300, 1200, healthRatio);
+          if (this.heartbeatEvent) this.heartbeatEvent.delay = heartbeatDelay;
+        }
+
+        spawnEnemy() {
+          const { width, height } = this.scale;
+          const edge = Phaser.Math.Between(0, 3);
+          let x = 0, y = 0;
+          if (edge === 0) { x = Phaser.Math.Between(0, width); y = -40; }
+          if (edge === 1) { x = width + 40; y = Phaser.Math.Between(0, height); }
+          if (edge === 2) { x = Phaser.Math.Between(0, width); y = height + 40; }
+          if (edge === 3) { x = -40; y = Phaser.Math.Between(0, height); }
+
+          const enemy = this.enemies.get(x, y, 'enemy');
+          if (!enemy) return;
+          enemy.setActive(true);
+          enemy.setVisible(true);
+          enemy.setScale(0.7);
+          enemy.speed = Phaser.Math.Between(70, 130) + Math.min(80, this.elapsed / 1000);
+          enemy.body.setSize(enemy.displayWidth * 0.6, enemy.displayHeight * 0.6, true);
+        }
+
+        handleBulletHit(bullet, enemy) {
+          bullet.setActive(false);
+          bullet.setVisible(false);
+          bullet.body.stop();
+
+          enemy.setActive(false);
+          enemy.setVisible(false);
+          enemy.body.stop();
+
+          const particleCount = this.lowPerfMode ? 12 : 16;
+          this.explosionEmitter.explode(particleCount, enemy.x, enemy.y);
+          this.score += 25;
+          this.kills += 1;
+
+          // Create score popup
+          const canvasBounds = this.canvas.getBoundingClientRect();
+          UI.createScorePopup(
+            (enemy.x / this.scale.width) * canvasBounds.width,
+            (enemy.y / this.scale.height) * canvasBounds.height,
+            25
+          );
+        }
+
+        handlePlayerHit(player, enemy) {
+          const now = this.time.now;
+          if (now < this.invulnerableUntil) return;
+          this.invulnerableUntil = now + 500;
+
+          enemy.setActive(false);
+          enemy.setVisible(false);
+          enemy.body.stop();
+
+          this.health -= Phaser.Math.Between(8, 14);
+          this.cameras.main.shake(200, 0.01);
+
+          UI.showDamageEffect();
+          UI.triggerGlitch();
+          safePlay(this, 'hit', { volume: 0.35 });
+
+          if (this.health <= 0) {
+            this.sound.stopAll();
+            this.scene.start('SceneGameOver', { score: this.score, kills: this.kills });
+          }
+        }
+      }
+
+      class SceneGameOver extends Phaser.Scene {
+        constructor() {
+          super('SceneGameOver');
+        }
+
+        create(data) {
+          const { width, height } = this.scale;
+          this.add.rectangle(0, 0, width, height, 0x05060a, 0.9).setOrigin(0);
+
+          const title = this.add.text(width / 2, height / 2 - 80, 'NO ONE HEARD YOU', {
+            fontFamily: 'Oxanium, sans-serif',
+            fontSize: '42px',
+            color: '#ff2d55',
+            align: 'center'
+          }).setOrigin(0.5);
+
+          this.add.text(width / 2, height / 2 - 20, `Final Score: ${data.score || 0}`, {
+            fontFamily: 'Oxanium, sans-serif',
+            fontSize: '20px',
+            color: '#d9e6ff'
+          }).setOrigin(0.5);
+
+          this.add.text(width / 2, height / 2 + 20, 'Press R or Click to Restart', {
+            fontFamily: 'Oxanium, sans-serif',
+            fontSize: '14px',
+            color: '#6c7b9d'
+          }).setOrigin(0.5);
+
+          this.tweens.add({
+            targets: title,
+            x: title.x + 4,
+            duration: 120,
+            yoyo: true,
+            repeat: -1
+          });
+
+          safePlay(this, 'scream', { volume: 0.5 });
+
+          // Show game over UI
+          UI.showGameOver(data.score || 0, data.kills || 0);
+
+          this.input.once('pointerdown', () => restartGame());
+          this.input.keyboard.once('keydown-R', () => restartGame());
+        }
+      }
+
+      config.scene = [SceneBoot, SceneGame, SceneGameOver];
+      new Phaser.Game(config);
+    })();
+  </script>
+</body>
+</html>
