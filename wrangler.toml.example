@@ -31,6 +31,7 @@ command = "echo 'No build step required for static HTML'"
 # Build output directory (relative to project root)
 # For static HTML, we deploy from root
 output_dir = "./"
+pages_build_output_dir = "./"
 
 # Static assets configuration
 [build.processing]
