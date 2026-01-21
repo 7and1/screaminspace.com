@@ -68,11 +68,11 @@ optimize_jpg() {
 }
 
 # Check for any JPEG files
-for jpg in "$PROJECT_ROOT"/*.jpg "$PROJECT_ROOT"/*.jpeg 2>/dev/null; do
+for jpg in "$PROJECT_ROOT"/*.jpg "$PROJECT_ROOT"/*.jpeg; do
     if [ -f "$jpg" ]; then
         optimize_jpg "$jpg"
     fi
-done
+done 2>/dev/null || true
 
 # ============================================
 # SVG Optimization
@@ -93,11 +93,11 @@ optimize_svg() {
     fi
 }
 
-for svg in "$PROJECT_ROOT"/*.svg 2>/dev/null; do
+for svg in "$PROJECT_ROOT"/*.svg; do
     if [ -f "$svg" ]; then
         optimize_svg "$svg"
     fi
-done
+done 2>/dev/null || true
 
 # ============================================
 # HTML Minification (optional)

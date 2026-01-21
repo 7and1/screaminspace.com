@@ -55,18 +55,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create deployment tag
-        id: tag
+      - name: Create deployment metadata
+        id: metadata
         run: |
           TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
           SHA_SHORT=$(git rev-parse --short HEAD)
-          TAG_NAME="deploy-${TIMESTAMP}-${SHA_SHORT}"
 
-          echo "name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
           echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
-
-          git tag -a "$TAG_NAME" -m "Deployment: ${TIMESTAMP}"
-          git push origin "$TAG_NAME" || echo "Tag already exists"
 
       - name: Optimize assets
         run: |
@@ -84,7 +80,7 @@ jobs:
             "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "git_sha": "${{ github.sha }}",
             "git_ref": "${{ github.ref }}",
-            "git_tag": "${{ steps.tag.outputs.name }}",
+            "git_tag": "${{ steps.metadata.outputs.name }}",
             "deployed_by": "${{ github.actor }}",
             "workflow_run": "${{ github.run_number }}"
           }
@@ -97,7 +93,7 @@ jobs:
           token: '${{ github.token }}'
           environment: production
           environment-url: https://screaminspace.com
-          description: 'Deploy ${{ steps.tag.outputs.name }}'
+          description: 'Deploy ${{ steps.metadata.outputs.name }}'
           logs: https://dash.cloudflare.com/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/view/screaminspace
 
       - name: Deploy to Cloudflare Pages
@@ -216,8 +212,7 @@ jobs:
           | Field | Value |
           |-------|-------|
           | URL | https://screaminspace.com |
-          | Tag | ${{ steps.tag.outputs.name }} |
-          | SHA | ${{ steps.tag.outputs.sha_short }} |
+          | SHA | ${{ steps.metadata.outputs.sha_short }} |
           | Deployed by | ${{ github.actor }} |
           | Deployment ID | ${{ steps.deploy.outputs.deployment_id }} |
 
