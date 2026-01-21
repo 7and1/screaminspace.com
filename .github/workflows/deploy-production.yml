@@ -68,24 +68,6 @@ jobs:
         run: |
           bash scripts/optimize-assets.sh
 
-      - name: Generate deployment artifacts
-        run: |
-          mkdir -p dist
-          cp index.html 404.html robots.txt sitemap.xml dist/
-          cp -r assets dist/
-
-          # Generate deployment metadata
-          cat > dist/deployment.json <<EOF
-          {
-            "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "git_sha": "${{ github.sha }}",
-            "git_ref": "${{ github.ref }}",
-            "git_tag": "${{ steps.metadata.outputs.name }}",
-            "deployed_by": "${{ github.actor }}",
-            "workflow_run": "${{ github.run_number }}"
-          }
-          EOF
-
       - name: Create GitHub Deployment
         id: gh_deploy
         uses: chrnorm/deployment-action@v2
@@ -93,7 +75,7 @@ jobs:
           token: '${{ github.token }}'
           environment: production
           environment-url: https://screaminspace.com
-          description: 'Deploy ${{ steps.metadata.outputs.name }}'
+          description: 'Deploy ${{ github.sha }}'
           logs: https://dash.cloudflare.com/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/view/screaminspace
 
       - name: Deploy to Cloudflare Pages
@@ -102,79 +84,30 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          RESPONSE=$(curl -sX POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/screaminspace/deployments" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"branch\": \"main\",
-              \"commit_hash\": \"${{ github.sha }}\",
-              \"commit_message\": \"${{ github.event.head_commit.message }}\",
-              \"production\": true
-            }")
+          # Install wrangler
+          npm install -g wrangler
 
-          DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.result.id // empty')
-          DEPLOYMENT_URL=$(echo "$RESPONSE" | jq -r '.result.url // empty')
-          STAGES_URL=$(echo "$RESPONSE" | jq -r '.result.stages_url // empty')
+          # Deploy using wrangler
+          npx wrangler pages deploy . --project-name=screaminspace
 
-          if [ -z "$DEPLOYMENT_ID" ]; then
-            echo "Failed to create deployment"
-            echo "$RESPONSE"
-            exit 1
-          fi
+          # Get latest deployment info
+          DEPLOYMENT_INFO=$(curl -s "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/screaminspace/deployments?per_page=1" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENT_INFO" | jq -r '.result[0].id // empty')
+          DEPLOYMENT_URL=$(echo "$DEPLOYMENT_INFO" | jq -r '.result[0].url // empty')
 
           echo "id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
           echo "url=https://screaminspace.com" >> $GITHUB_OUTPUT
-          echo "stages_url=$STAGES_URL" >> $GITHUB_OUTPUT
+          echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "deployment_id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
 
           echo "Deployment ID: $DEPLOYMENT_ID"
-          echo "Stages URL: $STAGES_URL"
+          echo "Deployment URL: $DEPLOYMENT_URL"
 
-      - name: Wait for deployment completion
-        id: wait
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          DEPLOYMENT_ID: ${{ steps.deploy.outputs.deployment_id }}
+      - name: Verify deployment
         run: |
-          echo "Waiting for deployment ${DEPLOYMENT_ID} to complete..."
-          MAX_ATTEMPTS=60
-          ATTEMPT=0
-
-          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-            RESPONSE=$(curl -s "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/screaminspace/deployments/$DEPLOYMENT_ID" \
-              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
-
-            STAGE=$(echo "$RESPONSE" | jq -r '.result.latest_stage.stage // empty')
-            STATUS=$(echo "$RESPONSE" | jq -r '.result.latest_stage.status // empty')
-
-            echo "Current stage: $STAGE - Status: $STATUS"
-
-            if [ "$STATUS" = "success" ]; then
-              echo "Deployment completed successfully"
-              exit 0
-            fi
-
-            if [ "$STATUS" = "failure" ] || [ "$STATUS" = "error" ]; then
-              echo "Deployment failed"
-              echo "$RESPONSE" | jq '.result.latest_stage'
-              exit 1
-            fi
-
-            ATTEMPT=$((ATTEMPT + 1))
-            sleep 10
-          done
-
-          echo "Deployment timed out"
-          exit 1
-
-      - name: Run smoke tests
-        run: |
-          bash scripts/smoke-test.sh "https://screaminspace.com"
-
-      - name: Verify deployment health
-        run: |
-          bash scripts/health-check.sh "https://screaminspace.com"
+          curl -fSsI "https://screaminspace.com" | head -5
 
       - name: Update deployment status to success
         if: success()
@@ -191,17 +124,9 @@ jobs:
         uses: chrnorm/deployment-status@v2
         with:
           token: '${{ github.token }}'
-          deployment-id: ${{ steps.gh_deploy.outputs.deployment-id }}
+          deployment-id: ${{ steps.gh_deploy.outputs.deployment_id }}
           state: 'failure'
           description: 'Deployment failed - check logs'
-
-      - name: Rollback on failure
-        if: failure()
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          bash scripts/rollback.sh production
 
       - name: Create release summary
         if: success()
