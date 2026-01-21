@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Scream In Space | Free Sci-Fi Horror Survival Shooter Game</title>
   <meta name="description" content="Play Scream In Space - a free browser-based sci-fi horror survival shooter. Navigate darkness, fight enemies with limited flashlight vision, experience retro CRT glitch aesthetics. No download required." />
   <meta name="keywords" content="scream in space, sci-fi horror game, space shooter, survival horror, browser game, HTML5 game, free web game, top-down shooter, flashlight game, darkness survival, indie horror game, retro CRT game, space survival" />
   <meta name="author" content="Scream In Space" />
   <meta name="publisher" content="screaminspace.com" />
-  <meta name="robots" content="index,follow" />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
   <meta name="theme-color" content="#05060a" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="format-detection" content="telephone=no" />
   <link rel="canonical" href="https://screaminspace.com/" />
 
   <meta property="og:type" content="website" />
@@ -77,9 +79,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.90.0/phaser.min.js" as="script" crossorigin="anonymous" integrity="sha384-AvQiDMZAVLda3VtAoU5MCfBz8pzXhteb2CiUJeKBmPlWzpXj1uJ96Km11+YuFNu/" />
+  <link rel="preload" href="/assets/player.png" as="image" fetchpriority="high" />
+  <link rel="preload" href="/assets/enemy.png" as="image" />
+  <link rel="preload" href="/assets/bullet.png" as="image" />
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;500;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2305060a'/%3E%3Cpath d='M32 6 L56 58 L32 48 L8 58 Z' fill='%2300f5ff'/%3E%3Ccircle cx='32' cy='30' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
-  <link rel="dns-prefetch" href="https://screaminspace.com/assets/" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
 
   <style>
     :root {
@@ -454,6 +462,44 @@
       pointer-events: auto;
       display: flex;
       gap: 8px;
+    }
+
+    /* ============ Tutorial Hints ============ */
+    #tutorial-hints {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      transform: translate(-50%, -6px);
+      display: flex;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(5, 12, 22, 0.75);
+      border: 1px solid rgba(0, 245, 255, 0.25);
+      color: var(--text);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 30;
+      backdrop-filter: blur(6px);
+    }
+
+    #tutorial-hints.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .tutorial-step {
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+
+    .tutorial-step.done {
+      opacity: 0.4;
+      text-decoration: line-through;
     }
 
     /* ============ Pause Menu ============ */
@@ -892,6 +938,12 @@
         font-size: 13px;
       }
 
+      #tutorial-hints {
+        top: 64px;
+        flex-direction: column;
+        align-items: center;
+      }
+
       #joystick-zone {
         bottom: 24px;
         left: 24px;
@@ -1098,6 +1150,13 @@
       </div>
     </div>
 
+    <!-- Tutorial Hints -->
+    <div id="tutorial-hints" aria-live="polite" aria-hidden="true">
+      <div class="tutorial-step" data-step="move">Move: WASD / Arrows</div>
+      <div class="tutorial-step" data-step="aim">Aim: Mouse</div>
+      <div class="tutorial-step" data-step="fire">Fire: Click / Space</div>
+    </div>
+
     <!-- Pause Menu -->
     <div id="pause-menu" role="dialog" aria-labelledby="pause-title" aria-hidden="true">
       <div class="pause-panel">
@@ -1188,6 +1247,18 @@
 
   <script>
     // Performance monitoring singleton
+    const PERF_DEBUG = (() => {
+      try {
+        return (
+          location.hostname === 'localhost' ||
+          location.hostname.endsWith('.pages.dev') ||
+          localStorage.getItem('screaminspace-debug') === 'true'
+        );
+      } catch {
+        return false;
+      }
+    })();
+
     const PerformanceMonitor = {
       fps: 60,
       frameTime: 16.67,
@@ -1211,11 +1282,11 @@
         // Auto-detect low-end device and enable performance mode
         if (fps < 45 && !this.lowMode) {
           this.lowMode = true;
-          console.log('[Perf] Low-end device detected, enabling performance mode');
+          if (PERF_DEBUG) console.log('[Perf] Low-end device detected, enabling performance mode');
           window.dispatchEvent(new CustomEvent('perf-low'));
         } else if (fps > 55 && this.lowMode) {
           this.lowMode = false;
-          console.log('[Perf] High-end device detected, disabling performance mode');
+          if (PERF_DEBUG) console.log('[Perf] High-end device detected, disabling performance mode');
           window.dispatchEvent(new CustomEvent('perf-high'));
         }
       },
@@ -1287,6 +1358,29 @@
         const saved = localStorage.getItem('screaminspace-settings');
         if (saved) {
           GameState.settings = { ...GameState.settings, ...JSON.parse(saved) };
+        } else {
+          // Smart defaults for first-time visitors (performance + accessibility)
+          const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+          const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+          const saveData = Boolean(connection?.saveData);
+          const effectiveType = String(connection?.effectiveType || '');
+          const deviceMemory = Number(navigator.deviceMemory || 0);
+          const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          const lowEndCPU = (navigator.hardwareConcurrency || 4) <= 2;
+
+          if (prefersReducedMotion) {
+            GameState.settings.reducedMotion = true;
+            GameState.settings.crtEffects = false;
+          }
+
+          if (saveData || effectiveType === 'slow-2g' || effectiveType === '2g') {
+            GameState.settings.quality = 'low';
+            GameState.settings.crtEffects = false;
+          }
+
+          if ((deviceMemory && deviceMemory <= 2) || lowEndCPU || isMobileUA) {
+            GameState.settings.quality = 'low';
+          }
         }
       } catch (e) {
         console.warn('Could not load settings:', e);
@@ -1353,11 +1447,20 @@
       finalScoreValue: document.getElementById('final-score-value'),
       finalKillsValue: document.getElementById('final-kills-value'),
       gameContainer: document.getElementById('game-container'),
+      tutorialHints: document.getElementById('tutorial-hints'),
+      tutorialSteps: {
+        move: document.querySelector('[data-step="move"]'),
+        aim: document.querySelector('[data-step="aim"]'),
+        fire: document.querySelector('[data-step="fire"]')
+      },
+      tutorialState: { move: false, aim: false, fire: false },
+      tutorialTimer: null,
 
       showStartScreen() {
         this.startScreen.classList.remove('hidden');
         this.hud.classList.remove('visible');
         this.gameOverScreen.classList.remove('visible');
+        this.hideTutorial();
       },
 
       hideStartScreen() {
@@ -1436,6 +1539,51 @@
         this.gameContainer.appendChild(popup);
 
         setTimeout(() => popup.remove(), 800);
+      },
+
+      resetTutorial() {
+        if (!this.tutorialHints) return;
+
+        const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+        if (this.tutorialSteps.move) {
+          this.tutorialSteps.move.textContent = isTouch ? 'Move: left joystick' : 'Move: WASD / Arrows';
+        }
+        if (this.tutorialSteps.aim) {
+          this.tutorialSteps.aim.textContent = isTouch ? 'Aim: drag anywhere' : 'Aim: mouse';
+        }
+        if (this.tutorialSteps.fire) {
+          this.tutorialSteps.fire.textContent = isTouch ? 'Fire: right button' : 'Fire: Click / Space';
+        }
+
+        this.tutorialState = { move: false, aim: false, fire: false };
+        Object.values(this.tutorialSteps).forEach(step => step?.classList.remove('done'));
+
+        this.tutorialHints.classList.add('visible');
+        this.tutorialHints.setAttribute('aria-hidden', 'false');
+
+        if (this.tutorialTimer) window.clearTimeout(this.tutorialTimer);
+        this.tutorialTimer = window.setTimeout(() => this.hideTutorial(), 9000);
+      },
+
+      markTutorialStep(step) {
+        if (!this.tutorialHints) return;
+        if (!this.tutorialState[step]) {
+          this.tutorialState[step] = true;
+          this.tutorialSteps[step]?.classList.add('done');
+        }
+
+        const allDone = Object.values(this.tutorialState).every(Boolean);
+        if (allDone) this.hideTutorial();
+      },
+
+      hideTutorial() {
+        if (!this.tutorialHints) return;
+        this.tutorialHints.classList.remove('visible');
+        this.tutorialHints.setAttribute('aria-hidden', 'true');
+        if (this.tutorialTimer) {
+          window.clearTimeout(this.tutorialTimer);
+          this.tutorialTimer = null;
+        }
       }
     };
 
@@ -1448,9 +1596,12 @@
       moveVector: { x: 0, y: 0 },
       isFiring: false,
       aimPosition: { x: 0.5, y: 0.5 },
+      initialized: false,
 
       init() {
+        if (this.initialized) return;
         if (!this.joystickZone) return;
+        this.initialized = true;
 
         // Joystick handling
         let joystickActive = false;
@@ -1604,15 +1755,28 @@
 
     // ============ Game Control Functions ============
     let gameScene = null;
+    let phaserGame = null;
+
+    function stopGameOverScene() {
+      if (phaserGame) {
+        phaserGame.scene.stop('SceneGameOver');
+      }
+    }
 
     function startGame() {
       UI.hideStartScreen();
       UI.hideGameOver();
+      UI.hideSettings();
       GameState.isPlaying = true;
       GameState.isPaused = false;
+      UI.resetTutorial();
 
       if (gameScene) {
         gameScene.scene.restart();
+        stopGameOverScene();
+      } else if (phaserGame) {
+        stopGameOverScene();
+        phaserGame.scene.start('SceneGame');
       }
     }
 
@@ -1640,8 +1804,13 @@
       UI.hideSettings();
       GameState.isPlaying = true;
       GameState.isPaused = false;
+      UI.resetTutorial();
       if (gameScene) {
         gameScene.scene.restart();
+        stopGameOverScene();
+      } else if (phaserGame) {
+        stopGameOverScene();
+        phaserGame.scene.start('SceneGame');
       }
     }
 
@@ -1651,46 +1820,86 @@
       UI.hidePauseMenu();
       UI.hideGameOver();
       UI.hideSettings();
+      UI.hideTutorial();
       UI.showStartScreen();
       if (gameScene) {
         gameScene.scene.stop();
         gameScene = null;
       }
+      stopGameOverScene();
     }
+
+    // Auto-pause when tab is hidden (prevents wasted CPU/GPU and audio surprises)
+    (() => {
+      let autoPaused = false;
+
+      const maybeAutoPause = () => {
+        if (!GameState.isPlaying) return;
+        if (GameState.isPaused) return;
+        autoPaused = true;
+        pauseGame();
+      };
+
+      const maybeAutoResume = () => {
+        if (!autoPaused) return;
+        autoPaused = false;
+        if (!GameState.isPlaying) return;
+        if (!GameState.isPaused) return;
+        resumeGame();
+      };
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) maybeAutoPause();
+        else maybeAutoResume();
+      });
+
+      window.addEventListener('pagehide', () => maybeAutoPause(), { passive: true });
+      window.addEventListener('pageshow', () => {
+        if (!document.hidden) maybeAutoResume();
+      }, { passive: true });
+    })();
 
     // Initialize settings on load
     loadSettings();
   </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.90.0/phaser.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.90.0/phaser.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" integrity="sha384-AvQiDMZAVLda3VtAoU5MCfBz8pzXhteb2CiUJeKBmPlWzpXj1uJ96Km11+YuFNu/"></script>
   <script>
     (() => {
       'use strict';
 
       // ============ Quality Configuration ============
-      const getQualityConfig = () => {
-        const quality = GameState.settings.quality || 'medium';
+      const getQualityConfig = () => ({
+        particleCount: {
+          low: { engine: 60, explosion: 12 },
+          medium: { engine: 35, explosion: 16 },
+          high: { engine: 25, explosion: 20 }
+        },
+        enemyMaxCount: {
+          low: 30,
+          medium: 50,
+          high: 80
+        },
+        bulletMaxSize: {
+          low: 25,
+          medium: 45,
+          high: 60
+        },
+        visionUpdateRate: {
+          low: 3,
+          medium: 2,
+          high: 1
+        }
+      });
+
+      const getActiveQualityConfig = (quality = GameState.settings.quality || 'medium') => {
+        const config = getQualityConfig();
+        const selected = config.enemyMaxCount[quality] ? quality : 'medium';
         return {
-          particleCount: {
-            low: { engine: 60, explosion: 12 },
-            medium: { engine: 35, explosion: 16 },
-            high: { engine: 25, explosion: 20 }
-          },
-          enemyMaxCount: {
-            low: 30,
-            medium: 50,
-            high: 80
-          },
-          bulletMaxSize: {
-            low: 25,
-            medium: 45,
-            high: 60
-          },
-          visionUpdateRate: {
-            low: 3,
-            medium: 2,
-            high: 1
-          }
+          particleCount: config.particleCount[selected],
+          enemyMaxCount: config.enemyMaxCount[selected],
+          bulletMaxSize: config.bulletMaxSize[selected],
+          visionUpdateRate: config.visionUpdateRate[selected]
         };
       };
 
@@ -1699,16 +1908,17 @@
       const PERF_CONFIG = {
         targetFPS: 60,
         mobileTargetFPS: 30,
-        particleCount: qualityConfig.particleCount,
-        enemyMaxCount: qualityConfig.enemyMaxCount,
-        bulletMaxSize: qualityConfig.bulletMaxSize,
-        visionUpdateRate: qualityConfig.visionUpdateRate,
         physicsStep: { high: 1, low: 2 }
       };
 
       // Device detection
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isLowEnd = isMobile || navigator.hardwareConcurrency <= 2;
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const saveData = Boolean(connection?.saveData);
+      const deviceMemory = Number(navigator.deviceMemory || 0);
+      const lowEndCPU = navigator.hardwareConcurrency <= 2;
+      const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+      const isLowEnd = isMobile || lowEndCPU || saveData || prefersReducedMotion || (deviceMemory && deviceMemory <= 2);
 
       const GAME_WIDTH = 1280;
       const GAME_HEIGHT = 720;
@@ -1719,6 +1929,13 @@
         height: GAME_HEIGHT,
         parent: 'game-container',
         backgroundColor: '#05060a',
+        render: {
+          antialias: !isLowEnd,
+          pixelArt: true,
+          roundPixels: true,
+          powerPreference: 'high-performance',
+          desynchronized: true
+        },
         physics: {
           default: 'arcade',
           arcade: {
@@ -1747,10 +1964,62 @@
 
       const toRadians = Phaser.Math.DegToRad;
 
+      const fallbackAudio = (() => {
+        let ctx = null;
+        const getContext = () => {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return null;
+          if (!ctx) ctx = new AudioCtx();
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+          }
+          return ctx;
+        };
+
+        const playTone = (frequency, duration, volume = 0.06) => {
+          const audioCtx = getContext();
+          if (!audioCtx) return;
+          const oscillator = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const now = audioCtx.currentTime;
+
+          oscillator.type = 'sine';
+          oscillator.frequency.value = frequency;
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+          oscillator.connect(gain);
+          gain.connect(audioCtx.destination);
+          oscillator.start(now);
+          oscillator.stop(now + duration);
+        };
+
+        const tones = {
+          laser: { frequency: 520, duration: 0.08, volume: 0.05 },
+          hit: { frequency: 180, duration: 0.12, volume: 0.07 },
+          heartbeat: { frequency: 90, duration: 0.1, volume: 0.05 },
+          scream: { frequency: 140, duration: 0.4, volume: 0.08 }
+        };
+
+        return {
+          play(key, config) {
+            const tone = tones[key];
+            if (!tone) return;
+            const volume = typeof config?.volume === 'number'
+              ? Math.min(0.12, config.volume)
+              : tone.volume;
+            playTone(tone.frequency, tone.duration, volume);
+          }
+        };
+      })();
+
       const safePlay = (scene, key, config) => {
         if (!GameState.settings.sound) return;
         if (scene.cache.audio.exists(key)) {
           scene.sound.play(key, config);
+        } else {
+          fallbackAudio.play(key, config);
         }
       };
 
@@ -1801,8 +2070,10 @@
           });
 
           // Set base URL for assets (add ?v=cache bust if needed)
-          this.load.setBaseURL('https://screaminspace.com/');
-          this.load.setPath('assets/');
+          const baseURL = window.location.hostname.includes('screaminspace.com')
+            ? 'https://screaminspace.com/'
+            : '';
+          this.load.setBaseURL(baseURL);
 
           // Set cross origin for CDN assets
           this.load.setCORS('anonymous');
@@ -1858,6 +2129,11 @@
       class SceneGame extends Phaser.Scene {
         constructor() {
           super('SceneGame');
+          this.resetState();
+          this.qualityListenerAttached = false;
+        }
+
+        resetState() {
           this.lastFired = 0;
           this.fireRate = 180;
           this.health = 100;
@@ -1867,17 +2143,23 @@
           this.invulnerableUntil = 0;
           this.spawnDelay = 1400;
           this.elapsed = 0;
+          this.gracePeriod = 3500;
           this.lowPerfMode = isLowEnd;
           this.frameCount = 0;
-          this.visionUpdateRate = PERF_CONFIG.visionUpdateRate;
+          this.visionUpdateRate = getActiveQualityConfig().visionUpdateRate;
           this.lastEnemyUpdate = 0;
           this.enemyUpdateRate = 100;
           this.cachedPlayerPos = { x: 0, y: 0 };
           this.cachedAimAngle = 0;
           this.isPaused = false;
+          this.lastPointerPos = { x: 0, y: 0 };
+          this.aimInitialized = false;
+          this.handlePerfLow = null;
+          this.handlePerfHigh = null;
         }
 
         create() {
+          this.resetState();
           const { width, height } = this.scale;
 
           // Set reference for UI
@@ -1896,7 +2178,7 @@
             .setAlpha(this.lowPerfMode ? 0.4 : 0.55)
             .setPipeline('TextureTintPipeline');
 
-          this.renderer.config.antialias = true;
+          this.renderer.config.antialias = !this.lowPerfMode;
 
           this.player = this.physics.add.sprite(width * 0.5, height * 0.5, 'player');
           this.player.setScale(0.7);
@@ -1910,7 +2192,7 @@
           this.cursors = this.input.keyboard.createCursorKeys();
           this.keys = this.input.keyboard.addKeys('W,A,S,D,SPACE,ESC,P');
 
-          const qualityConfig = getQualityConfig();
+          const qualityConfig = getActiveQualityConfig();
           this.bullets = this.physics.add.group({
             classType: Bullet,
             maxSize: qualityConfig.bulletMaxSize,
@@ -2018,9 +2300,14 @@
           this.input.on('pointermove', () => this.updateAim());
 
           // Listen for performance and quality changes
-          window.addEventListener('perf-low', () => this.enableLowPerfMode());
-          window.addEventListener('perf-high', () => this.disableLowPerfMode());
-          window.addEventListener('quality-change', (e) => this.onQualityChange(e.detail));
+          this.handlePerfLow = () => this.enableLowPerfMode();
+          this.handlePerfHigh = () => this.disableLowPerfMode();
+          window.addEventListener('perf-low', this.handlePerfLow);
+          window.addEventListener('perf-high', this.handlePerfHigh);
+          if (!this.qualityListenerAttached) {
+            window.addEventListener('quality-change', (e) => this.onQualityChange(e.detail));
+            this.qualityListenerAttached = true;
+          }
 
           // Initialize touch controls on touch devices
           if (isMobile || ('ontouchstart' in window)) {
@@ -2032,6 +2319,10 @@
 
           this.cachedPlayerPos.x = this.player.x;
           this.cachedPlayerPos.y = this.player.y;
+
+          if (!GameState.isPlaying) {
+            this.pauseGame();
+          }
         }
 
         pauseGame() {
@@ -2049,42 +2340,51 @@
         }
 
         onQualityChange(quality) {
-          const config = getQualityConfig();
+          if (!this.engineEmitter || !this.explosionEmitter || !this.bullets || !this.enemies) return;
+          const config = getActiveQualityConfig(quality);
           this.visionUpdateRate = config.visionUpdateRate;
           this.bullets.maxSize = config.bulletMaxSize;
           this.enemies.maxSize = config.enemyMaxCount;
           this.engineEmitter.setFrequency(config.particleCount.engine);
           this.explosionEmitter.maxParticles = config.particleCount.explosion;
+          if (this.enemyPool) this.enemyPool.maxSize = config.enemyMaxCount;
         }
 
         enableLowPerfMode() {
           if (this.lowPerfMode) return;
           this.lowPerfMode = true;
-          const config = getQualityConfig();
-          this.visionUpdateRate = config.visionUpdateRate.low;
-          this.engineEmitter.setFrequency(config.particleCount.low.engine);
+          const config = getActiveQualityConfig('low');
+          this.visionUpdateRate = config.visionUpdateRate;
+          this.engineEmitter.setFrequency(config.particleCount.engine);
           this.engineEmitter.maxParticles = 30;
           this.explosionEmitter.maxParticles = 20;
-          this.enemies.maxSize = config.enemyMaxCount.low;
+          this.bullets.maxSize = config.bulletMaxSize;
+          this.enemies.maxSize = config.enemyMaxCount;
+          if (this.enemyPool) this.enemyPool.maxSize = config.enemyMaxCount;
           this.darkness.setAlpha(0.75);
         }
 
         disableLowPerfMode() {
           if (!this.lowPerfMode) return;
           this.lowPerfMode = false;
-          const config = getQualityConfig();
+          const config = getActiveQualityConfig();
           this.visionUpdateRate = config.visionUpdateRate;
           this.engineEmitter.setFrequency(config.particleCount.engine);
           this.engineEmitter.maxParticles = 50;
           this.explosionEmitter.maxParticles = config.particleCount.explosion;
+          this.bullets.maxSize = config.bulletMaxSize;
           this.enemies.maxSize = config.enemyMaxCount;
+          if (this.enemyPool) this.enemyPool.maxSize = config.enemyMaxCount;
           this.darkness.setAlpha(0.82);
         }
 
         shutdown() {
-          window.removeEventListener('perf-low', this.enableLowPerfMode);
-          window.removeEventListener('perf-high', this.disableLowPerfMode);
-          window.removeEventListener('quality-change', this.onQualityChange);
+          if (this.handlePerfLow) {
+            window.removeEventListener('perf-low', this.handlePerfLow);
+          }
+          if (this.handlePerfHigh) {
+            window.removeEventListener('perf-high', this.handlePerfHigh);
+          }
 
           if (this.engineEmitter) {
             this.engineEmitter.stop();
@@ -2157,6 +2457,10 @@
           this.player.setAcceleration(ax, ay);
           this.cachedPlayerPos.x = this.player.x;
           this.cachedPlayerPos.y = this.player.y;
+
+          if (ax !== 0 || ay !== 0) {
+            UI.markTutorialStep('move');
+          }
         }
 
         updateAim() {
@@ -2177,6 +2481,20 @@
           this.aimAngle = Phaser.Math.Angle.Between(this.cachedPlayerPos.x, this.cachedPlayerPos.y, aimX, aimY);
           this.player.setRotation(this.aimAngle + Math.PI / 2);
           this.cachedAimAngle = this.aimAngle;
+
+          if (!this.aimInitialized) {
+            this.lastPointerPos.x = aimX;
+            this.lastPointerPos.y = aimY;
+            this.aimInitialized = true;
+          } else {
+            const dx = aimX - this.lastPointerPos.x;
+            const dy = aimY - this.lastPointerPos.y;
+            if (Math.abs(dx) + Math.abs(dy) > 2) {
+              UI.markTutorialStep('aim');
+            }
+            this.lastPointerPos.x = aimX;
+            this.lastPointerPos.y = aimY;
+          }
         }
 
         tryShoot(time = 0) {
@@ -2196,6 +2514,7 @@
             this.aimAngle
           );
           this.lastFired = time;
+          UI.markTutorialStep('fire');
 
           if (!this.lowPerfMode) {
             this.cameras.main.shake(50, 0.002);
@@ -2301,6 +2620,7 @@
         }
 
         spawnEnemy() {
+          if (this.elapsed < this.gracePeriod) return;
           const { width, height } = this.scale;
           const edge = Phaser.Math.Between(0, 3);
           let x = 0, y = 0;
@@ -2333,7 +2653,7 @@
           this.kills += 1;
 
           // Create score popup
-          const canvasBounds = this.canvas.getBoundingClientRect();
+          const canvasBounds = this.game.canvas.getBoundingClientRect();
           UI.createScorePopup(
             (enemy.x / this.scale.width) * canvasBounds.width,
             (enemy.y / this.scale.height) * canvasBounds.height,
@@ -2358,6 +2678,11 @@
           safePlay(this, 'hit', { volume: 0.35 });
 
           if (this.health <= 0) {
+            GameState.isPlaying = false;
+            GameState.isPaused = false;
+            UI.hidePauseMenu();
+            UI.hideSettings();
+            UI.hideTutorial();
             this.sound.stopAll();
             this.scene.start('SceneGameOver', { score: this.score, kills: this.kills });
           }
@@ -2411,7 +2736,7 @@
       }
 
       config.scene = [SceneBoot, SceneGame, SceneGameOver];
-      new Phaser.Game(config);
+      phaserGame = new Phaser.Game(config);
     })();
   </script>
 </body>

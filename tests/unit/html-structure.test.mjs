@@ -23,3 +23,12 @@ test('index.html includes required Phaser scenes', () => {
 test('index.html uses Phaser 3 via CDN', () => {
   assert.match(html, /phaser\.min\.js/);
 });
+
+test('index.html pins Phaser CDN with SRI', () => {
+  assert.match(html, /phaser\.min\.js[^>]+integrity="sha384-/);
+});
+
+test('index.html includes PWA/Apple icons', () => {
+  assert.match(html, /rel="apple-touch-icon"/);
+  assert.match(html, /assets\/icons\/favicon-32\.png/);
+});
