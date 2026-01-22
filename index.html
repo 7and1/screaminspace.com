@@ -2023,32 +2023,21 @@
         }
       };
 
-      class Bullet extends Phaser.Physics.Arcade.Image {
-        constructor(scene, x, y) {
-          super(scene, x, y, 'bullet');
-          this.speed = 900;
-          this.lifespan = 900;
+      // Bullet factory - using default physics image instead of custom class
+      // Phaser 3.80+ has issues with extending Physics.Arcade.Image
+      const fireBullet = (group, x, y, angle, speed = 900) => {
+        const bullet = group.get(x, y);
+        if (bullet) {
+          bullet.setActive(true);
+          bullet.setVisible(true);
+          bullet.setPosition(x, y);
+          bullet.setRotation(angle + Math.PI / 2);
+          bullet.setData('lifespan', 900);
+          bullet.setData('speed', speed);
+          group.scene.physics.velocityFromRotation(angle, speed, bullet.body.velocity);
         }
-
-        fire(x, y, angle) {
-          this.setActive(true);
-          this.setVisible(true);
-          this.setPosition(x, y);
-          this.setRotation(angle + Math.PI / 2);
-          this.lifespan = 900;
-          this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
-        }
-
-        preUpdate(time, delta) {
-          super.preUpdate(time, delta);
-          this.lifespan -= delta;
-          if (this.lifespan <= 0) {
-            this.setActive(false);
-            this.setVisible(false);
-            this.body.stop();
-          }
-        }
-      }
+        return bullet;
+      };
 
       class SceneBoot extends Phaser.Scene {
         constructor() {
@@ -2194,9 +2183,9 @@
 
           const qualityConfig = getActiveQualityConfig();
           this.bullets = this.physics.add.group({
-            classType: Bullet,
+            defaultKey: 'bullet',
             maxSize: qualityConfig.bulletMaxSize,
-            runChildUpdate: true
+            runChildUpdate: false
           });
 
           this.enemies = this.physics.add.group({
@@ -2424,6 +2413,19 @@
 
           this.updateEngineTrail();
 
+          // Update bullet lifecycle
+          this.bullets.getChildren().forEach(bullet => {
+            if (bullet.active) {
+              const lifespan = bullet.getData('lifespan') || 900;
+              bullet.setData('lifespan', lifespan - delta);
+              if (bullet.getData('lifespan') <= 0) {
+                bullet.setActive(false);
+                bullet.setVisible(false);
+                bullet.body.stop();
+              }
+            }
+          });
+
           if (this.frameCount % 10 === 0) {
             this.updateUI();
           }
@@ -2502,17 +2504,17 @@
           if (!wantsFire) return;
           if (time < this.lastFired + this.fireRate) return;
 
-          const bullet = this.bullets.get();
-          if (!bullet) return;
-
           const offsetDistance = this.player.displayWidth * 0.45;
           if (!this._offsetVector) this._offsetVector = new Phaser.Math.Vector2();
           this._offsetVector.setTo(offsetDistance, 0).rotate(this.aimAngle);
-          bullet.fire(
+
+          fireBullet(
+            this.bullets,
             this.cachedPlayerPos.x + this._offsetVector.x,
             this.cachedPlayerPos.y + this._offsetVector.y,
             this.aimAngle
           );
+
           this.lastFired = time;
           UI.markTutorialStep('fire');
 
